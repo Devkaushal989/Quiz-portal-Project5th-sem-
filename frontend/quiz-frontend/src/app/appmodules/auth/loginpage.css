@@ -1,0 +1,102 @@
+#changebutt {
+    border-radius: 10px;
+    margin: 10px auto;
+    border-color: black;
+    border: 4px;
+
+}
+
+#changebutt:hover {
+    font-size: larger;
+    border: 2px thich rgb(197, 194, 194);
+    box-shadow: 10px 5px 5px rgb(0, 0, 0);
+}
+
+.mycontainer {
+    border-radius: 40px;
+    background: linear-gradient(135deg,
+            white 0%,
+            white 50%,
+            white 100%);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mycontainer:hover {
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 10px 5px 5px black;
+    background: linear-gradient(135deg,
+            rgba(198, 205, 206, 0.8) 0%,
+            rgba(234, 241, 243, 0.6) 50%,
+            rgba(230, 222, 222, 0.8) 100%);
+    border-color: rgb(39, 38, 38);
+    color: white;
+    text-decoration: none;
+}
+
+.multiple_users {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 20px;
+}
+
+.both_form {
+    /* background: linear-gradient(135deg,
+            rgba(224, 229, 230, 0.8) 0%,
+            rgba(234, 241, 243, 0.6) 50%,
+            rgba(227, 224, 224, 0.8) 100%); */
+    border-radius: 10px;
+
+}
+
+.logup_button {
+    margin-top: 9px;
+}
+
+input:hover {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    animation: bounce 8s infinite;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+button {
+    background-color: #198754;
+    color: white;
+    border: 2px solid #198754;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: white;
+    color: #198754;
+    border-color: #198754;
+    transform: translateY(-3px);
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+/* .logo_image{
+    margin-top: 10px;
+    border: 10px solid white;
+    border-radius: 100%;
+} */
