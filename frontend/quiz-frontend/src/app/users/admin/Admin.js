@@ -12,9 +12,9 @@ export default function Admin() {
   ];
 
   const studentsData = [
-    { name: 'Name', email: 'Email', courses: 'Enrolled Courses', actions: ['Edit', 'Delete'] },
-    { name: 'Name', email: 'Email', courses: 'Assigned Courses', count: 10, actions: ['Edit', 'Delete'] },
-    { name: 'Name', email: 'Email', courses: 'Assigned Courses', count: 5, actions: ['Edit', 'Delete'] }
+    { name: 'Raju Arora', email: 'raju123@gmail.com', courses: 'B.tech', actions: ['Edit', 'Delete'] },
+    { name: 'Raj Verma', email: 'kumarraj954@gmail.com', courses: 'BCA', count: 10, actions: ['Edit', 'Delete'] },
+    { name: 'Jay Singh', email: 'jaysingh767@gmail.com', courses: 'Btech', count: 5, actions: ['Edit', 'Delete'] }
   ];
 
   const coursesData = [

@@ -10,49 +10,49 @@ export default function TeacherResultsPage() {
   const studentResults = [
     {
       id: 1,
-      studentName: 'Alice Smith',
+      studentName: 'Mayank ',
       courseTitle: 'Physics I',
       score: '88%',
       date: '2024-07-30'
     },
     {
       id: 2,
-      studentName: 'Bob Johnson',
+      studentName: 'Raj',
       courseTitle: 'Physics I',
       score: '72%',
       date: '2024-07-25'
     },
     {
       id: 3,
-      studentName: 'Bob Johnson',
+      studentName: 'Raj',
       courseTitle: 'Calculus Basics',
       score: '72%',
       date: '28'
     },
     {
       id: 4,
-      studentName: 'Bob Johnson',
+      studentName: 'Raj',
       courseTitle: 'Mathematics',
       score: '95%',
       date: '25'
     },
     {
       id: 5,
-      studentName: 'Charlie Brown',
+      studentName: 'Jay singh',
       courseTitle: 'Physics I',
       score: '95%',
       date: '10leaf'
     },
     {
       id: 6,
-      studentName: 'Question Text',
+      studentName: 'Bheem singh',
       courseTitle: 'Physics I',
       score: '2',
       date: 'View Details'
     },
     {
       id: 7,
-      studentName: 'Raj',
+      studentName: 'Raju ',
       courseTitle: 'Chemistry',
       score: '92',
       date: 'View Details'
