@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './loginpage.css'
-import Quiz_Logo from '../../images/quiz_logo.png'
+import './loginpage.css';
+import Quiz_Logo from '../../images/quiz_logo.png';
 
 export default function AuthPage() {
     const [userType, setUserType] = useState('Student');
@@ -98,7 +98,7 @@ export default function AuthPage() {
                                 </button>
                                 <p className="text-center text-muted">
                                     Already have an account?{' '}
-                                    <a href="#" className="text-primary text-decoration-none fw-medium">
+                                    <a href="./" className="text-primary text-decoration-none fw-medium">
                                         Log In
                                     </a>
                                 </p>

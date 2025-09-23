@@ -89,7 +89,7 @@ export default function TeacherDashboard() {
                                                     }`}
                                                 onClick={() => setActiveTab('Dashboard2')}
                                             >
-                                                <span className="me-3">⬜</span> Dashboard
+                                                <span className="me-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Dashboard
                                             </button>
                                         </li>
                                         <li className="nav-item mb-1">
@@ -98,7 +98,7 @@ export default function TeacherDashboard() {
                                                     }`}
                                                 onClick={() => setActiveTab('Courses/Exams')}
                                             >
-                                                <span className="me-3">🏠</span> Courses/Exams
+                                                <span className="me-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg></span> Courses/Exams
                                             </button>
                                         </li>
                                          <Link to="/teacher/result" className='text-decoration-none'>
@@ -108,7 +108,7 @@ export default function TeacherDashboard() {
                                                     }`}
                                                 onClick={() => setActiveTab('Results')}
                                             >
-                                                <span className="me-3">🏆</span> Results
+                                                <span className="me-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span> Results
                                             </button>
                                         </li>
                                         </Link>
@@ -118,7 +118,7 @@ export default function TeacherDashboard() {
                                                     }`}
                                                 onClick={() => setActiveTab('Settings')}
                                             >
-                                                <span className="me-3">⚙️</span> Settings
+                                                <span className="me-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></span> Settings
                                             </button>
                                         </li>
                                     </ul>

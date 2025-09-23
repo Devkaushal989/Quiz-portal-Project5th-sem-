@@ -64,7 +64,9 @@ export default function StudentResultsPage() {
                       className={`nav-link w-100 text-center border-0 ${activeTab === 'Dashboard2' ? 'bg-primary text-white' : 'text-dark'} rounded`}
                       onClick={() => setActiveTab('Dashboard2')}
                     >
-                      📊 Dashboard
+                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline></svg>   Dashboard
                     </button>
                   </li>
                   </Link>
@@ -73,7 +75,7 @@ export default function StudentResultsPage() {
                       className={`nav-link w-100 text-center border-0 ${activeTab === 'My Results' ? 'bg-primary text-white' : 'text-dark'} rounded`}
                       onClick={() => setActiveTab('My Results')}
                     >
-                      📈 My Results
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M12.89 1.45l8 4A2 2 0 0 1 22 7.24v9.53a2 2 0 0 1-1.11 1.79l-8 4a2 2 0 0 1-1.79 0l-8-4a2 2 0 0 1-1.1-1.8V7.24a2 2 0 0 1 1.11-1.79l8-4a2 2 0 0 1 1.78 0z"></path><polyline points="2.32 6.16 12 11 21.68 6.16"></polyline><line x1="12" y1="22.76" x2="12" y2="11"></line></svg> My Results
                     </button>
                   </li>
                   <li className="nav-item mb-2">
@@ -81,7 +83,7 @@ export default function StudentResultsPage() {
                       className={`nav-link w-100 text-center border-0 ${activeTab === 'Results' ? 'bg-primary text-white' : 'text-dark'} rounded`}
                       onClick={() => setActiveTab('Results')}
                     >
-                      📋 Results
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg> Results
                     </button>
                   </li>
                   <li className="nav-item mb-2">
@@ -89,7 +91,7 @@ export default function StudentResultsPage() {
                       className={`nav-link w-100 text-center border-0 ${activeTab === 'Settings' ? 'bg-primary text-white' : 'text-dark'} rounded`}
                       onClick={() => setActiveTab('Settings')}
                     >
-                      ⚙️ Settings
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg> Settings
                     </button>
                   </li>
                 </ul>
