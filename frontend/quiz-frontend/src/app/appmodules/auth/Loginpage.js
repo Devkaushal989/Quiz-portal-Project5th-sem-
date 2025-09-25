@@ -13,30 +13,13 @@ export default function AuthPage() {
         loginPassword: ''
     });
 
-    // const handleInputChange = (e) => {
-    //     setFormData({
-    //         ...formData,
-    //         [e.target.name]: e.target.value
-    //     });
-    // };
-
-    // const handleSignUp = (e) => {
-    //     e.preventDefault();
-    //     console.log('Sign up:', { userType, ...formData });
-    // };
-
-    // const handleLogIn = (e) => {
-    //     e.preventDefault();
-    //     console.log('Log in:', { userType, loginEmail: formData.loginEmail, loginPassword: formData.loginPassword });
-    // };
+    
 
     return (
         <>
             <div className="min-vh-100  d-flex align-items-center justify-content-center p-4 " style={{ backgroundColor: 'rgba(36,105,92,0.1)' }}>
                 <div className="bg-white shadow-lg w-100 mycontainer" style={{ maxWidth: '900px' }} >
-                    {/* <div className="d-flex justify-content-center">
-                        <img src={Quiz_Logo} alt="logo" width="150" className='logo_image'/>
-                    </div> */}
+                    
                     <div className="p-5">
                         <div className="mb-5 multiple_users">
                             <div className="btn-group multiple_users" role="group" >

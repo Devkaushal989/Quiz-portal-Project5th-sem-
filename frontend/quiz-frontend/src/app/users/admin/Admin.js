@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.css';
 
 export default function Admin() {
   const [activeTab, setActiveTab] = useState('Quiz');
@@ -55,24 +56,20 @@ export default function Admin() {
 
   return (
     <>
-      {/* Bootstrap CSS */}
-      <link 
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
-        rel="stylesheet" 
-      />
+     
       
       <div className="min-vh-100 bg-light">
         <div className="container-fluid">
           <div className="row">
-            {/* Sidebar */}
+          
             <div className="col-md-3 col-lg-2 bg-dark vh-100 p-0">
               <div className="p-3">
-                {/* Admin Header */}
+               
                 <div className="mb-4">
                   <h6 className="text-white fw-bold">Admin Dashboard</h6>
                 </div>
 
-                {/* Navigation */}
+              
                 <nav>
                   <ul className="nav flex-column">
                     <li className="nav-item mb-1">
@@ -154,7 +151,7 @@ export default function Admin() {
               </div>
             </div>
 
-            {/* Main Content */}
+          
             <div className="col-md-9 col-lg-10 p-4">
               {/* Stats Cards */}
               <div className="row mb-4">
@@ -171,7 +168,7 @@ export default function Admin() {
               </div>
 
               <div className="row">
-                {/* Manage Students Section */}
+               
                 <div className="col-lg-8 mb-4">
                   <div className="card border-0 shadow-sm">
                     <div className="card-body">
@@ -206,7 +203,6 @@ export default function Admin() {
                         </table>
                       </div>
 
-                      {/* Manage Courses Section */}
                       <div className="mt-5">
                         <h5 className="fw-bold mb-4">Manage Courses</h5>
                         <div className="row">
@@ -241,7 +237,6 @@ export default function Admin() {
                   </div>
                 </div>
 
-                {/* Quick Add Section */}
                 <div className="col-lg-4">
                   <div className="card border-0 shadow-sm">
                     <div className="card-body">
@@ -276,7 +271,6 @@ export default function Admin() {
         </div>
       </div>
 
-      {/* Bootstrap JS */}
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </>
   );
