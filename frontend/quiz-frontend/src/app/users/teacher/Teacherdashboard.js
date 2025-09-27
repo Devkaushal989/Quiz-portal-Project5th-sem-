@@ -11,7 +11,7 @@ export default function TeacherDashboard() {
             id: 1,
             title: 'Physics I',
             questions: 20,
-            duration: 45,
+            
             progress: 75,
             icon: '⚗️'
         },
@@ -19,7 +19,7 @@ export default function TeacherDashboard() {
             id: 2,
             title: 'Calculus Basics',
             questions: 20,
-            duration: 45,
+            
             progress: 100,
             icon: '📐'
         },
@@ -27,7 +27,7 @@ export default function TeacherDashboard() {
             id: 3,
             title: 'Physics',
             questions: 20,
-            duration: 45,
+            
             progress: 75,
             icon: '🔬'
         },
@@ -35,7 +35,7 @@ export default function TeacherDashboard() {
             id: 4,
             title: 'Physics',
             questions: 20,
-            duration: 45,
+            
             progress: 15,
             icon: '⚛️'
         }
@@ -146,7 +146,7 @@ export default function TeacherDashboard() {
                                                         <div className="flex-grow-1">
                                                             <h6 className="card-title fw-bold mb-1">{course.title}</h6>
                                                             <p className="card-text text-muted small mb-0">
-                                                                {course.questions} Questions | {course.duration} min
+                                                                {course.questions} Questions 
                                                             </p>
                                                         </div>
                                                     </div>
