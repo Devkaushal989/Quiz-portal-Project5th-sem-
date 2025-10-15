@@ -12,6 +12,4 @@ const mydb = mongoose.connect(db).then(()=>{
 
 });
 
-
-
-module.exports=mydb;
+module.exports=mydb;    
