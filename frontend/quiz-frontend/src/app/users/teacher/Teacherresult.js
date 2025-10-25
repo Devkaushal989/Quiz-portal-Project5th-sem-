@@ -27,35 +27,35 @@ export default function TeacherResultsPage() {
       studentName: 'Raj',
       courseTitle: 'Calculus Basics',
       score: '72%',
-      date: '28'
+      date: '2025-09-20'
     },
     {
       id: 4,
       studentName: 'Raj',
       courseTitle: 'Mathematics',
       score: '95%',
-      date: '25'
+      date: '2025-05-25'
     },
     {
       id: 5,
       studentName: 'Jay singh',
       courseTitle: 'Physics I',
       score: '95%',
-      date: '10leaf'
+      date: '2025-05-10'
     },
     {
       id: 6,
       studentName: 'Bheem singh',
       courseTitle: 'Physics I',
-      score: '2',
-      date: 'View Details'
+      score: '20%',
+      date: '	2025-07-14'
     },
     {
       id: 7,
       studentName: 'Raju ',
       courseTitle: 'Chemistry',
-      score: '92',
-      date: 'View Details'
+      score: '92%',
+      date: '	2025-08-30'
     }
   ];
 
