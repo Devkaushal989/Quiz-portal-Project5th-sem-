@@ -1,7 +1,3 @@
-// ============================================
-// FILE: models/QuestionPool.js
-// ============================================
-
 const mongoose = require('mongoose');
 
 const questionPoolSchema = new mongoose.Schema({
@@ -24,10 +20,34 @@ const questionPoolSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
-  questions: [{
+  easyQuestions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Question'
   }],
+  mediumQuestions: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Question'
+  }],
+  hardQuestions: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Question'
+  }],
+  easyCount: {
+    type: Number,
+    default: 0
+  },
+  mediumCount: {
+    type: Number,
+    default: 0
+  },
+  hardCount: {
+    type: Number,
+    default: 0
+  },
+  totalQuestions: {
+    type: Number,
+    default: 0
+  },
   isActive: {
     type: Boolean,
     default: true
@@ -42,9 +62,9 @@ const questionPoolSchema = new mongoose.Schema({
   }
 });
 
-
 questionPoolSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
+  this.totalQuestions = this.easyCount + this.mediumCount + this.hardCount;
   next();
 });
 

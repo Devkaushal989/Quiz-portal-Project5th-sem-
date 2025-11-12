@@ -1,12 +1,10 @@
-const Course = require('../models/Course');
-const QuestionPool = require('../models/QuestionPool');
+  const Course = require('../models/Course');
+  const QuestionPool = require('../models/QuestionPool');
 
-// Create new course
-exports.createCourse = async (req, res) => {
+  exports.createCourse = async (req, res) => {
   try {
     const { courseName, description, duration, questionPool } = req.body;
 
-    // Validation
     if (!courseName || !duration || !questionPool) {
       return res.status(400).json({ 
         success: false,
@@ -14,16 +12,17 @@ exports.createCourse = async (req, res) => {
       });
     }
 
-    // Check if question pool exists
-    const pool = await QuestionPool.findById(questionPool);
+    const pool = await QuestionPool.findById(questionPool)
+      .populate('easyQuestions')
+      .populate('mediumQuestions')
+      .populate('hardQuestions');
+
     if (!pool) {
       return res.status(404).json({ 
-        success: false,
         message: 'Question pool not found' 
       });
     }
 
-    // Check if course name already exists
     const existingCourse = await Course.findOne({ 
       courseName, 
       createdBy: req.user._id 
@@ -36,17 +35,20 @@ exports.createCourse = async (req, res) => {
       });
     }
 
-    // Create new course
+    const totalQuestions = 
+      (pool.easyQuestions?.length || 0) +
+      (pool.mediumQuestions?.length || 0) +
+      (pool.hardQuestions?.length || 0);
+
     const course = await Course.create({
       courseName,
       description,
       duration,
       questionPool,
       createdBy: req.user._id,
-      totalQuestions: pool.questions.length
+      totalQuestions
     });
 
-    // Populate question pool data
     await course.populate('questionPool');
 
     res.status(201).json({
@@ -64,128 +66,125 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-// Get all courses for a teacher
-exports.getCourses = async (req, res) => {
-  try {
-    const courses = await Course.find({ 
-      createdBy: req.user._id,
-      isActive: true 
-    })
-    .populate('questionPool')
-    .sort({ createdAt: -1 });
-
-    res.status(200).json({
-      success: true,
-      count: courses.length,
-      data: courses
-    });
-  } catch (error) {
-    console.error('Get Courses Error:', error);
-    res.status(500).json({ 
-      success: false,
-      message: 'Server error while fetching courses',
-      error: error.message 
-    });
-  }
-};
-
-// Get single course
-exports.getCourseById = async (req, res) => {
-  try {
-    const course = await Course.findById(req.params.id)
+  exports.getCourses = async (req, res) => {
+    try {
+      const courses = await Course.find({ 
+        createdBy: req.user._id,
+        isActive: true 
+      })
       .populate('questionPool')
-      .populate('createdBy', 'fullName email');
+      .sort({ createdAt: -1 });
 
-    if (!course) {
-      return res.status(404).json({ 
+      res.status(200).json({
+        success: true,
+        count: courses.length,
+        data: courses
+      });
+    } catch (error) {
+      console.error('Get Courses Error:', error);
+      res.status(500).json({ 
         success: false,
-        message: 'Course not found' 
+        message: 'Server error while fetching courses',
+        error: error.message 
       });
     }
+  };
 
-    res.status(200).json({
-      success: true,
-      data: course
-    });
-  } catch (error) {
-    console.error('Get Course Error:', error);
-    res.status(500).json({ 
-      success: false,
-      message: 'Server error while fetching course',
-      error: error.message 
-    });
-  }
-};
+  exports.getCourseById = async (req, res) => {
+    try {
+      const course = await Course.findById(req.params.id)
+        .populate('questionPool')
+        .populate('createdBy', 'fullName email');
 
-// Update course
-exports.updateCourse = async (req, res) => {
-  try {
-    const { courseName, description, duration, questionPool, progress } = req.body;
+      if (!course) {
+        return res.status(404).json({ 
+          success: false,
+          message: 'Course not found' 
+        });
+      }
 
-    const updateData = {
-      updatedAt: Date.now()
-    };
-
-    if (courseName) updateData.courseName = courseName;
-    if (description) updateData.description = description;
-    if (duration) updateData.duration = duration;
-    if (questionPool) updateData.questionPool = questionPool;
-    if (progress !== undefined) updateData.progress = progress;
-
-    const course = await Course.findOneAndUpdate(
-      { _id: req.params.id, createdBy: req.user._id },
-      updateData,
-      { new: true, runValidators: true }
-    ).populate('questionPool');
-
-    if (!course) {
-      return res.status(404).json({ 
+      res.status(200).json({
+        success: true,
+        data: course
+      });
+    } catch (error) {
+      console.error('Get Course Error:', error);
+      res.status(500).json({ 
         success: false,
-        message: 'Course not found or unauthorized' 
+        message: 'Server error while fetching course',
+        error: error.message 
       });
     }
+  };
 
-    res.status(200).json({
-      success: true,
-      message: 'Course updated successfully',
-      data: course
-    });
-  } catch (error) {
-    console.error('Update Course Error:', error);
-    res.status(500).json({ 
-      success: false,
-      message: 'Server error while updating course',
-      error: error.message 
-    });
-  }
-};
+  exports.updateCourse = async (req, res) => {
+    try {
+      const { courseName, description, duration, questionPool, progress } = req.body;
 
-// Delete course
-exports.deleteCourse = async (req, res) => {
-  try {
-    const course = await Course.findOneAndUpdate(
-      { _id: req.params.id, createdBy: req.user._id },
-      { isActive: false },
-      { new: true }
-    );
+      const updateData = {
+        updatedAt: Date.now()
+      };
 
-    if (!course) {
-      return res.status(404).json({ 
+      if (courseName) updateData.courseName = courseName;
+      if (description) updateData.description = description;
+      if (duration) updateData.duration = duration;
+      if (questionPool) updateData.questionPool = questionPool;
+      if (progress !== undefined) updateData.progress = progress;
+
+      const course = await Course.findOneAndUpdate(
+        { _id: req.params.id, createdBy: req.user._id },
+        updateData,
+        { new: true, runValidators: true }
+      ).populate('questionPool');
+
+      if (!course) {
+        return res.status(404).json({ 
+          success: false,
+          message: 'Course not found or unauthorized' 
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Course updated successfully',
+        data: course
+      });
+    } catch (error) {
+      console.error('Update Course Error:', error);
+      res.status(500).json({ 
         success: false,
-        message: 'Course not found or unauthorized' 
+        message: 'Server error while updating course',
+        error: error.message 
       });
     }
+  };
 
-    res.status(200).json({
-      success: true,
-      message: 'Course deleted successfully'
-    });
-  } catch (error) {
-    console.error('Delete Course Error:', error);
-    res.status(500).json({ 
-      success: false,
-      message: 'Server error while deleting course',
-      error: error.message 
-    });
-  }
-};
+  exports.deleteCourse = async (req, res) => {
+    try {
+      const course = await Course.findOneAndUpdate(
+        { _id: req.params.id, createdBy: req.user._id },
+        { isActive: false },
+        { new: true }
+      );
+
+      if (!course) {
+        return res.status(404).json({ 
+          success: false,
+          message: 'Course not found or unauthorized' 
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Course deleted successfully'
+      });
+    } catch (error) {
+      console.error('Delete Course Error:', error);
+      res.status(500).json({ 
+        success: false,
+        message: 'Server error while deleting course',
+        error: error.message 
+      });
+    }
+  };
+    

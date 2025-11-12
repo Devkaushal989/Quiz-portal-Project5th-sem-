@@ -12,7 +12,7 @@ const courseSchema = new mongoose.Schema({
   },
   duration: {
     type: Number,
-    required: true, // duration in minutes
+    required: true, 
     min: 1
   },
   questionPool: {

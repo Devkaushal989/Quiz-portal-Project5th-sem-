@@ -7,21 +7,35 @@ const questionSchema = new mongoose.Schema({
     trim: true
   },
   options: [{
-    optionText: String,
-    isCorrect: Boolean
+    optionText: {
+      type: String,
+      required: true
+    },
+    isCorrect: {
+      type: Boolean,
+      default: false
+    }
   }],
   correctAnswer: {
     type: Number,
-    required: true
+    required: true,
+    min: 1,
+    max: 4
   },
   marks: {
     type: Number,
     required: true,
     default: 1
   },
+  difficulty: {
+    type: String,
+    enum: ['easy', 'medium', 'hard'],
+    required: true
+  },
   questionPool: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'QuestionPool'
+    ref: 'QuestionPool',
+    required: true
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
