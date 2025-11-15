@@ -8,17 +8,17 @@ exports.addQuestion = async (req, res) => {
     const { questionText, options, correctAnswer, marks, difficulty, questionPoolId } = req.body;
 
     if (!questionText || !options || !correctAnswer || !difficulty || !questionPoolId) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: 'All fields are required' 
+        message: 'All fields are required'
       });
     }
 
     const pool = await QuestionPool.findById(questionPoolId);
     if (!pool) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'Question pool not found' 
+        message: 'Question pool not found'
       });
     }
 
@@ -52,10 +52,10 @@ exports.addQuestion = async (req, res) => {
     });
   } catch (error) {
     console.error('Add Question Error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: 'Server error while adding question',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -63,9 +63,9 @@ exports.addQuestion = async (req, res) => {
 exports.uploadQuestionsCSV = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: 'No CSV file uploaded' 
+        message: 'No CSV file uploaded'
       });
     }
 
@@ -73,9 +73,9 @@ exports.uploadQuestionsCSV = async (req, res) => {
 
     const pool = await QuestionPool.findById(questionPoolId);
     if (!pool) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'Question pool not found' 
+        message: 'Question pool not found'
       });
     }
 
@@ -88,7 +88,7 @@ exports.uploadQuestionsCSV = async (req, res) => {
       .on('end', async () => {
         try {
           for (const row of results) {
-          
+
             const options = [
               { optionText: row.option1, isCorrect: parseInt(row.correctAnswer) === 1 },
               { optionText: row.option2, isCorrect: parseInt(row.correctAnswer) === 2 },
@@ -108,7 +108,7 @@ exports.uploadQuestionsCSV = async (req, res) => {
 
             questions.push(question);
 
-           
+
             if (row.difficulty.toLowerCase() === 'easy') {
               pool.easyQuestions.push(question._id);
               pool.easyCount += 1;
@@ -123,7 +123,7 @@ exports.uploadQuestionsCSV = async (req, res) => {
 
           await pool.save();
 
-          
+
           fs.unlinkSync(req.file.path);
 
           res.status(201).json({
@@ -137,7 +137,7 @@ exports.uploadQuestionsCSV = async (req, res) => {
             }
           });
         } catch (error) {
-          
+
           if (fs.existsSync(req.file.path)) {
             fs.unlinkSync(req.file.path);
           }
@@ -146,10 +146,10 @@ exports.uploadQuestionsCSV = async (req, res) => {
       });
   } catch (error) {
     console.error('CSV Upload Error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: 'Server error while uploading CSV',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -173,10 +173,10 @@ exports.getQuestionsByPool = async (req, res) => {
     });
   } catch (error) {
     console.error('Get Questions Error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: 'Server error while fetching questions',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -186,9 +186,9 @@ exports.deleteQuestion = async (req, res) => {
     const question = await Question.findById(req.params.id);
 
     if (!question) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'Question not found' 
+        message: 'Question not found'
       });
     }
 
@@ -215,10 +215,10 @@ exports.deleteQuestion = async (req, res) => {
     });
   } catch (error) {
     console.error('Delete Question Error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: 'Server error while deleting question',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -233,9 +233,9 @@ exports.getRandomQuestionsForStudent = async (req, res) => {
       .populate('hardQuestions');
 
     if (!pool) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'Question pool not found' 
+        message: 'Question pool not found'
       });
     }
 
@@ -252,10 +252,10 @@ exports.getRandomQuestionsForStudent = async (req, res) => {
     });
   } catch (error) {
     console.error('Get Random Questions Error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: 'Server error while fetching questions',
-      error: error.message 
+      error: error.message
     });
   }
 };
