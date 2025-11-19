@@ -110,9 +110,9 @@ export default function AuthPage() {
             case 'Teacher':
                 window.location.href = '/teacher';
                 break;
-            case 'Admin':
-                window.location.href = '/admin';
-                break;
+            // // case 'Admin':
+            // //     window.location.href = '/admin';
+            //     break;
             default:
                 window.location.href = '/';
         }
@@ -141,7 +141,7 @@ export default function AuthPage() {
                         {/* User Type Selection */}
                         <div className="mb-5 multiple_users">
                             <div className="btn-group multiple_users" role="group">
-                                {['Student', 'Teacher', 'Admin'].map((type) => (
+                                {['Student', 'Teacher'].map((type) => (
                                     <button
                                         key={type}
                                         type="button"
