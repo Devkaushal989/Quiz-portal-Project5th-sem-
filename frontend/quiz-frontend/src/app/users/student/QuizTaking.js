@@ -50,10 +50,9 @@ export default function QuizTaking() {
             if (response.data.success) {
                 const quizData = response.data.data;
                 setQuiz(quizData);
-                setTimeLeft(quizData.duration * 60); // Convert to seconds
+                setTimeLeft(quizData.duration * 60); 
                 setStartTime(Date.now());
 
-                // Initialize answers object
                 const initialAnswers = {};
                 quizData.questions.forEach((q, index) => {
                     initialAnswers[q._id] = null;
@@ -71,7 +70,7 @@ export default function QuizTaking() {
     const handleAnswerSelect = (questionId, optionIndex) => {
         setAnswers({
             ...answers,
-            [questionId]: optionIndex + 1 // Options are 1-indexed
+            [questionId]: optionIndex + 1 
         });
     };
 
@@ -98,9 +97,8 @@ export default function QuizTaking() {
 
         try {
             setSubmitting(true);
-            const timeTaken = Math.floor((Date.now() - startTime) / 1000); // seconds
+            const timeTaken = Math.floor((Date.now() - startTime) / 1000); 
 
-            // Format answers for submission
             const formattedAnswers = Object.keys(answers).map(questionId => ({
                 questionId: questionId,
                 selectedAnswer: answers[questionId]
@@ -116,7 +114,7 @@ export default function QuizTaking() {
             );
 
             if (response.data.success) {
-                // Redirect to result page
+                
                 navigate(`/student/result/${quiz.attemptId}`);
             }
         } catch (err) {
