@@ -355,7 +355,26 @@ export default function TeacherDashboard() {
                                 <div className="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary">
                                     <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3"
                                         style={{ width: '40px', height: '40px' }}>
-                                        <span className="text-white">👨‍🏫</span>
+                                        <span className="text-white"><svg xmlns="http://www.w3.org/2000/svg"
+     width="28" height="28"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="2"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+
+ 
+  <circle cx="12" cy="5" r="3"></circle>
+
+  <path d="M6 20v-2c0-3 2-5 6-5s6 2 6 5v2"></path>
+
+  <rect x="3" y="9" width="18" height="8" rx="1"></rect>
+
+  <line x1="12" y1="9" x2="12" y2="12"></line>
+
+</svg>
+</span>
                                     </div>
                                     <span className="fw-medium text-light">Teacher</span>
                                 </div>

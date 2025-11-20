@@ -3,11 +3,12 @@ const Course = require('../models/Course');
 const QuestionPool = require('../models/QuestionPool');
 const User = require('../schema/datamodel'); 
 
+// Get all students with their program and semester
 exports.getAllStudents = async (req, res) => {
   try {
     const students = await User.find({ userType: 'Student' })
-      .select('fullName email')
-      .sort({ fullName: 1 });
+      .select('fullName email program semester')
+      .sort({ program: 1, semester: 1, fullName: 1 });
 
     res.status(200).json({
       success: true,
@@ -24,9 +25,10 @@ exports.getAllStudents = async (req, res) => {
   }
 };
 
+// Assign quiz to students (by program/semester, individual, or all)
 exports.assignQuiz = async (req, res) => {
   try {
-    const { courseId, studentIds, assignToAll, dueDate, maxAttempts } = req.body;
+    const { courseId, studentIds, assignToAll, dueDate, maxAttempts, program, semester } = req.body;
 
     // Validation
     if (!courseId) {
@@ -36,6 +38,7 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
+    // Validate assignment type
     if (!assignToAll && (!studentIds || studentIds.length === 0)) {
       return res.status(400).json({
         success: false,
@@ -43,6 +46,7 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
+    // Get course and question pool
     const course = await Course.findById(courseId).populate('questionPool');
     if (!course) {
       return res.status(404).json({
@@ -51,19 +55,34 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
+    // Check if assignment already exists for this course and teacher
     const existingAssignment = await QuizAssignment.findOne({
       course: courseId,
-      assignedBy: req.user._id
+      assignedBy: req.user._id,
+      isActive: true
     });
 
     if (existingAssignment) {
+      // Update existing assignment
       if (assignToAll) {
         existingAssignment.assignedToAll = true;
         existingAssignment.assignedTo = [];
-      } else {
+        existingAssignment.program = undefined;
+        existingAssignment.semester = undefined;
+      } else if (program && semester) {
+        // Assignment by program and semester
         existingAssignment.assignedToAll = false;
         existingAssignment.assignedTo = studentIds;
+        existingAssignment.program = program;
+        existingAssignment.semester = semester;
+      } else {
+        // Individual student assignment
+        existingAssignment.assignedToAll = false;
+        existingAssignment.assignedTo = studentIds;
+        existingAssignment.program = undefined;
+        existingAssignment.semester = undefined;
       }
+      
       existingAssignment.dueDate = dueDate;
       existingAssignment.maxAttempts = maxAttempts || 1;
       await existingAssignment.save();
@@ -75,7 +94,8 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
-    const assignment = await QuizAssignment.create({
+    // Create new assignment
+    const assignmentData = {
       course: courseId,
       questionPool: course.questionPool._id,
       assignedBy: req.user._id,
@@ -83,11 +103,29 @@ exports.assignQuiz = async (req, res) => {
       assignedToAll: assignToAll,
       dueDate: dueDate,
       maxAttempts: maxAttempts || 1
-    });
+    };
+
+    // Add program and semester if provided (for program-based assignment)
+    if (program && semester && !assignToAll) {
+      assignmentData.program = program;
+      assignmentData.semester = semester;
+    }
+
+    const assignment = await QuizAssignment.create(assignmentData);
+
+    // Create response message
+    let message = '';
+    if (assignToAll) {
+      message = 'Quiz assigned successfully to all students';
+    } else if (program && semester) {
+      message = `Quiz assigned successfully to ${studentIds.length} student(s) in ${program} - Semester ${semester}`;
+    } else {
+      message = `Quiz assigned successfully to ${studentIds.length} student(s)`;
+    }
 
     res.status(201).json({
       success: true,
-      message: `Quiz assigned successfully to ${assignToAll ? 'all students' : studentIds.length + ' student(s)'}`,
+      message: message,
       data: assignment
     });
   } catch (error) {
@@ -100,6 +138,7 @@ exports.assignQuiz = async (req, res) => {
   }
 };
 
+// Get teacher's assignments with details
 exports.getTeacherAssignments = async (req, res) => {
   try {
     const assignments = await QuizAssignment.find({ 
@@ -108,7 +147,7 @@ exports.getTeacherAssignments = async (req, res) => {
     })
       .populate('course', 'courseName duration')
       .populate('questionPool', 'poolName category totalQuestions')
-      .populate('assignedTo', 'fullName email')
+      .populate('assignedTo', 'fullName email program semester')
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -126,13 +165,31 @@ exports.getTeacherAssignments = async (req, res) => {
   }
 };
 
+// Get student's assigned quizzes (including program/semester based)
 exports.getStudentAssignments = async (req, res) => {
   try {
-    // Find assignments where student is specifically assigned or assignedToAll is true
+    const student = await User.findById(req.user._id);
+    
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: 'Student not found'
+      });
+    }
+
+    // Find assignments where:
+    // 1. Student is specifically assigned (individual)
+    // 2. AssignedToAll is true (all students)
+    // 3. Assignment matches student's program and semester (class-based)
     const assignments = await QuizAssignment.find({
       $or: [
         { assignedTo: req.user._id },
-        { assignedToAll: true }
+        { assignedToAll: true },
+        { 
+          program: student.program, 
+          semester: student.semester,
+          assignedToAll: false 
+        }
       ],
       isActive: true
     })
@@ -141,10 +198,15 @@ exports.getStudentAssignments = async (req, res) => {
       .populate('assignedBy', 'fullName')
       .sort({ createdAt: -1 });
 
+    // Remove duplicates (in case student is in multiple matching conditions)
+    const uniqueAssignments = assignments.filter((assignment, index, self) =>
+      index === self.findIndex((a) => a._id.toString() === assignment._id.toString())
+    );
+
     res.status(200).json({
       success: true,
-      count: assignments.length,
-      data: assignments
+      count: uniqueAssignments.length,
+      data: uniqueAssignments
     });
   } catch (error) {
     console.error('Get Student Assignments Error:', error);
@@ -156,6 +218,7 @@ exports.getStudentAssignments = async (req, res) => {
   }
 };
 
+// Delete/deactivate assignment
 exports.deleteAssignment = async (req, res) => {
   try {
     const assignment = await QuizAssignment.findOneAndUpdate(
@@ -180,6 +243,41 @@ exports.deleteAssignment = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error while deleting assignment',
+      error: error.message
+    });
+  }
+};
+
+// Get students by program and semester (optional helper endpoint)
+exports.getStudentsByProgramSemester = async (req, res) => {
+  try {
+    const { program, semester } = req.query;
+
+    if (!program || !semester) {
+      return res.status(400).json({
+        success: false,
+        message: 'Program and semester are required'
+      });
+    }
+
+    const students = await User.find({ 
+      userType: 'Student',
+      program: program,
+      semester: semester
+    })
+      .select('fullName email program semester')
+      .sort({ fullName: 1 });
+
+    res.status(200).json({
+      success: true,
+      count: students.length,
+      data: students
+    });
+  } catch (error) {
+    console.error('Get Students by Program/Semester Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching students',
       error: error.message
     });
   }

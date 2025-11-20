@@ -24,12 +24,24 @@ const userSchema = new mongoose.Schema({
     enum: ['Student', 'Teacher', 'Admin'],
     required: true
   },
+  // Student-specific fields
+  program: {
+    type: String,
+    required: function() {
+      return this.userType === 'Student';
+    }
+  },
+  semester: {
+    type: String,
+    required: function() {
+      return this.userType === 'Student';
+    }
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
-
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
@@ -43,10 +55,8 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-
 userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);
-

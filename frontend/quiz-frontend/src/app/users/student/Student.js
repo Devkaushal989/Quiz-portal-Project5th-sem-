@@ -120,7 +120,24 @@ export default function StudentDashboard() {
                                 <div className="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary">
                                     <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3"
                                         style={{ width: '40px', height: '40px' }}>
-                                        <span className="text-white">👨‍🎓</span>
+                                        <span className="text-white"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="28" height="28"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round">
+
+                                            <circle cx="12" cy="6" r="3"></circle>
+
+                                            <path d="M6 20v-2c0-3 2-5 6-5s6 2 6 5v2"></path>
+
+                                            <polygon points="12 2 4 5 12 8 20 5 12 2"></polygon>
+                                            <line x1="20" y1="5" x2="20" y2="8"></line>
+
+                                        </svg>
+                                        </span>
                                     </div>
                                     <span className="fw-medium text-light">Student</span>
                                 </div>

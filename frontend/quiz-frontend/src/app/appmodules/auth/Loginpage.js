@@ -3,7 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './loginpage.css';
 import axios from 'axios';
 
-
 const API_BASE_URL = 'http://localhost:8700/api';
 
 export default function AuthPage() {
@@ -12,12 +11,29 @@ export default function AuthPage() {
         fullName: '',
         email: '',
         password: '',
+        program: '',
+        semester: '', // FIXED: Changed from 'section' to 'semester'
         loginEmail: '',
         loginPassword: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    // Program and Semester options
+    const programs = [
+        'B.Tech',
+        'BCA',
+        'BBA',
+        'B.com',
+        'Bsc Forensic Science',
+        'B.Pharma',
+        'D.Pharma',
+        'Bsc Agriculture',
+        'Other'
+    ];
+
+    const semesters = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
     const handleInputChange = (e) => {
         setFormData({
@@ -36,15 +52,24 @@ export default function AuthPage() {
         setSuccessMessage('');
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/auth/signup`, {
+            // Prepare signup data based on user type
+            const signupData = {
                 fullName: formData.fullName,
                 email: formData.email,
                 password: formData.password,
                 userType: userType
-            });
+            };
+
+            // Add program and semester only for students
+            if (userType === 'Student') {
+                signupData.program = formData.program;
+                signupData.semester = formData.semester;
+            }
+
+            const response = await axios.post(`${API_BASE_URL}/auth/signup`, signupData);
 
             if (response.data.success) {
-                setSuccessMessage('Registration successful! Please log in.');
+                setSuccessMessage('Registration successful! Redirecting...');
                 // Store token in localStorage
                 localStorage.setItem('token', response.data.data.token);
                 localStorage.setItem('user', JSON.stringify(response.data.data.user));
@@ -54,7 +79,9 @@ export default function AuthPage() {
                     ...formData,
                     fullName: '',
                     email: '',
-                    password: ''
+                    password: '',
+                    program: '',
+                    semester: ''
                 });
 
                 // Redirect based on user type after 2 seconds
@@ -110,9 +137,6 @@ export default function AuthPage() {
             case 'Teacher':
                 window.location.href = '/teacher';
                 break;
-            // // case 'Admin':
-            // //     window.location.href = '/admin';
-            //     break;
             default:
                 window.location.href = '/';
         }
@@ -121,10 +145,10 @@ export default function AuthPage() {
     return (
         <>
             <div className="min-vh-100 d-flex align-items-center justify-content-center p-4" 
-                 style={{ backgroundColor: 'rgba(36,105,92,0.1)' }}>
+                style={{ backgroundColor: 'rgba(36,105,92,0.1)' }}>
                 <div className="bg-white shadow-lg w-100 mycontainer" style={{ maxWidth: '900px' }}>
                     <div className="p-5">
-                        {/* Error/Success Messages */}
+                        
                         {error && (
                             <div className="alert alert-danger alert-dismissible fade show" role="alert">
                                 {error}
@@ -201,6 +225,47 @@ export default function AuthPage() {
                                             disabled={loading}
                                         />
                                     </div>
+
+                                    {/* Show Program and Semester only for Students */}
+                                    {userType === 'Student' && (
+                                        <>
+                                            <div className="mb-3">
+                                                <select
+                                                    name="program"
+                                                    value={formData.program}
+                                                    onChange={handleInputChange}
+                                                    className="form-select form-control-medium"
+                                                    required
+                                                    disabled={loading}
+                                                >
+                                                    <option value="">Select Program</option>
+                                                    {programs.map((prog) => (
+                                                        <option key={prog} value={prog}>
+                                                            {prog}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div className="mb-3">
+                                                <select
+                                                    name="semester"
+                                                    value={formData.semester}
+                                                    onChange={handleInputChange}
+                                                    className="form-select form-control-medium"
+                                                    required
+                                                    disabled={loading}
+                                                >
+                                                    <option value="">Select Semester</option>
+                                                    {semesters.map((sem) => (
+                                                        <option key={sem} value={sem}>
+                                                            Semester {sem}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </>
+                                    )}
+
                                     <button
                                         type="submit"
                                         className="btn btn-success w-100 mb-3"
@@ -255,7 +320,7 @@ export default function AuthPage() {
                                         className="btn btn-success w-100 logup_button"
                                         disabled={loading}
                                     >
-                                        {loading ? 'Logging In...' : 'Log Up'}
+                                        {loading ? 'Logging In...' : 'Log In'}
                                     </button>
                                 </form>
                             </div>
