@@ -821,10 +821,10 @@ export default function TeacherDashboard() {
                                                 disabled={loading}
                                             >
                                                 <option value="">Select Category</option>
-                                                <option value="physics">Physics</option>
-                                                <option value="mathematics">Mathematics</option>
-                                                <option value="chemistry">Chemistry</option>
-                                                <option value="biology">Biology</option>
+                                                <option value="physics">DSA With C++</option>
+                                                <option value="mathematics">ReactJS</option>
+                                                <option value="chemistry">Javascript</option>
+                                                <option value="biology">Computer Network</option>
                                                 <option value="other">Other</option>
                                             </select>
                                         </div>

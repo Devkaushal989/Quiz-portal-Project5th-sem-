@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     enum: ['Student', 'Teacher', 'Admin'],
     required: true
   },
-  // Student-specific fields
+ 
   program: {
     type: String,
     required: function() {
