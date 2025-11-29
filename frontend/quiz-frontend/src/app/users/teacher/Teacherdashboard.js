@@ -356,25 +356,25 @@ export default function TeacherDashboard() {
                                     <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3"
                                         style={{ width: '40px', height: '40px' }}>
                                         <span className="text-white"><svg xmlns="http://www.w3.org/2000/svg"
-     width="28" height="28"
-     viewBox="0 0 24 24"
-     fill="none"
-     stroke="currentColor"
-     stroke-width="2"
-     stroke-linecap="round"
-     stroke-linejoin="round">
+                                            width="28" height="28"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round">
 
- 
-  <circle cx="12" cy="5" r="3"></circle>
 
-  <path d="M6 20v-2c0-3 2-5 6-5s6 2 6 5v2"></path>
+                                            <circle cx="12" cy="5" r="3"></circle>
 
-  <rect x="3" y="9" width="18" height="8" rx="1"></rect>
+                                            <path d="M6 20v-2c0-3 2-5 6-5s6 2 6 5v2"></path>
 
-  <line x1="12" y1="9" x2="12" y2="12"></line>
+                                            <rect x="3" y="9" width="18" height="8" rx="1"></rect>
 
-</svg>
-</span>
+                                            <line x1="12" y1="9" x2="12" y2="12"></line>
+
+                                        </svg>
+                                        </span>
                                     </div>
                                     <span className="fw-medium text-light">Teacher</span>
                                 </div>
@@ -422,18 +422,45 @@ export default function TeacherDashboard() {
                                         </Link>
                                         <li className="nav-item mb-1">
                                             <button
-                                                className={`nav-link w-100 text-start border-0 d-flex align-items-center py-2 px-3 rounded text-light bg-transparent`}
+                                                className="nav-link w-100 text-start border-0 d-flex align-items-center py-2 px-3 rounded text-light bg-transparent hover-danger"
+                                                onClick={() => {
+                                                    
+                                                    localStorage.removeItem('token');
+                                                    localStorage.removeItem('user');
+                                                    
+                                                    window.location.href = '/';
+                                                }}
+                                                style={{
+                                                    transition: 'all 0.3s ease',
+                                                    cursor: 'pointer'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = '#dc3545';
+                                                    e.currentTarget.style.color = 'white';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                    e.currentTarget.style.color = '#f8f9fa';
+                                                }}
                                             >
                                                 <span className="me-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <line x1="8" y1="6" x2="21" y2="6"></line>
-                                                        <line x1="8" y1="12" x2="21" y2="12"></line>
-                                                        <line x1="8" y1="18" x2="21" y2="18"></line>
-                                                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                                                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                                                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        width="20" height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="red"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round">
+
+                                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+
                                                     </svg>
-                                                </span> Settings
+
+                                                </span>
+                                                <span style={{ color: '#dc3545', fontWeight: '500' }}>Logout</span>
                                             </button>
                                         </li>
                                     </ul>

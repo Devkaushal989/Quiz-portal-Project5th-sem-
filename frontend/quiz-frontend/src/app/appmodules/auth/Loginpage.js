@@ -12,7 +12,7 @@ export default function AuthPage() {
         email: '',
         password: '',
         program: '',
-        semester: '', // FIXED: Changed from 'section' to 'semester'
+        semester: '', 
         loginEmail: '',
         loginPassword: ''
     });
@@ -40,7 +40,7 @@ export default function AuthPage() {
             ...formData,
             [e.target.name]: e.target.value
         });
-        // Clear error messages when user types
+       
         setError('');
         setSuccessMessage('');
     };
@@ -52,7 +52,6 @@ export default function AuthPage() {
         setSuccessMessage('');
 
         try {
-            // Prepare signup data based on user type
             const signupData = {
                 fullName: formData.fullName,
                 email: formData.email,
@@ -60,7 +59,6 @@ export default function AuthPage() {
                 userType: userType
             };
 
-            // Add program and semester only for students
             if (userType === 'Student') {
                 signupData.program = formData.program;
                 signupData.semester = formData.semester;
@@ -70,11 +68,10 @@ export default function AuthPage() {
 
             if (response.data.success) {
                 setSuccessMessage('Registration successful! Redirecting...');
-                // Store token in localStorage
+                
                 localStorage.setItem('token', response.data.data.token);
                 localStorage.setItem('user', JSON.stringify(response.data.data.user));
-                
-                // Clear form
+               
                 setFormData({
                     ...formData,
                     fullName: '',
@@ -84,7 +81,6 @@ export default function AuthPage() {
                     semester: ''
                 });
 
-                // Redirect based on user type after 2 seconds
                 setTimeout(() => {
                     redirectToDashboard(userType);
                 }, 2000);
@@ -112,11 +108,10 @@ export default function AuthPage() {
 
             if (response.data.success) {
                 setSuccessMessage('Login successful! Redirecting...');
-                // Store token in localStorage
+              
                 localStorage.setItem('token', response.data.data.token);
                 localStorage.setItem('user', JSON.stringify(response.data.data.user));
                 
-                // Redirect based on user type after 1 second
                 setTimeout(() => {
                     redirectToDashboard(userType);
                 }, 1000);

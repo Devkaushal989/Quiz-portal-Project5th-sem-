@@ -3,7 +3,6 @@ const Course = require('../models/Course');
 const QuestionPool = require('../models/QuestionPool');
 const User = require('../schema/datamodel'); 
 
-// Get all students with their program and semester
 exports.getAllStudents = async (req, res) => {
   try {
     const students = await User.find({ userType: 'Student' })
@@ -25,12 +24,10 @@ exports.getAllStudents = async (req, res) => {
   }
 };
 
-// Assign quiz to students (by program/semester, individual, or all)
 exports.assignQuiz = async (req, res) => {
   try {
     const { courseId, studentIds, assignToAll, dueDate, maxAttempts, program, semester } = req.body;
 
-    // Validation
     if (!courseId) {
       return res.status(400).json({
         success: false,
@@ -38,7 +35,6 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
-    // Validate assignment type
     if (!assignToAll && (!studentIds || studentIds.length === 0)) {
       return res.status(400).json({
         success: false,
@@ -46,7 +42,6 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
-    // Get course and question pool
     const course = await Course.findById(courseId).populate('questionPool');
     if (!course) {
       return res.status(404).json({
@@ -55,7 +50,6 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
-    // Check if assignment already exists for this course and teacher
     const existingAssignment = await QuizAssignment.findOne({
       course: courseId,
       assignedBy: req.user._id,
@@ -63,20 +57,20 @@ exports.assignQuiz = async (req, res) => {
     });
 
     if (existingAssignment) {
-      // Update existing assignment
+      
       if (assignToAll) {
         existingAssignment.assignedToAll = true;
         existingAssignment.assignedTo = [];
         existingAssignment.program = undefined;
         existingAssignment.semester = undefined;
       } else if (program && semester) {
-        // Assignment by program and semester
+        
         existingAssignment.assignedToAll = false;
         existingAssignment.assignedTo = studentIds;
         existingAssignment.program = program;
         existingAssignment.semester = semester;
       } else {
-        // Individual student assignment
+        
         existingAssignment.assignedToAll = false;
         existingAssignment.assignedTo = studentIds;
         existingAssignment.program = undefined;
@@ -94,7 +88,6 @@ exports.assignQuiz = async (req, res) => {
       });
     }
 
-    // Create new assignment
     const assignmentData = {
       course: courseId,
       questionPool: course.questionPool._id,
@@ -105,7 +98,6 @@ exports.assignQuiz = async (req, res) => {
       maxAttempts: maxAttempts || 1
     };
 
-    // Add program and semester if provided (for program-based assignment)
     if (program && semester && !assignToAll) {
       assignmentData.program = program;
       assignmentData.semester = semester;
@@ -113,7 +105,7 @@ exports.assignQuiz = async (req, res) => {
 
     const assignment = await QuizAssignment.create(assignmentData);
 
-    // Create response message
+   
     let message = '';
     if (assignToAll) {
       message = 'Quiz assigned successfully to all students';
@@ -138,7 +130,6 @@ exports.assignQuiz = async (req, res) => {
   }
 };
 
-// Get teacher's assignments with details
 exports.getTeacherAssignments = async (req, res) => {
   try {
     const assignments = await QuizAssignment.find({ 
@@ -165,7 +156,6 @@ exports.getTeacherAssignments = async (req, res) => {
   }
 };
 
-// Get student's assigned quizzes (including program/semester based)
 exports.getStudentAssignments = async (req, res) => {
   try {
     const student = await User.findById(req.user._id);
@@ -177,10 +167,7 @@ exports.getStudentAssignments = async (req, res) => {
       });
     }
 
-    // Find assignments where:
-    // 1. Student is specifically assigned (individual)
-    // 2. AssignedToAll is true (all students)
-    // 3. Assignment matches student's program and semester (class-based)
+   
     const assignments = await QuizAssignment.find({
       $or: [
         { assignedTo: req.user._id },
@@ -198,7 +185,6 @@ exports.getStudentAssignments = async (req, res) => {
       .populate('assignedBy', 'fullName')
       .sort({ createdAt: -1 });
 
-    // Remove duplicates (in case student is in multiple matching conditions)
     const uniqueAssignments = assignments.filter((assignment, index, self) =>
       index === self.findIndex((a) => a._id.toString() === assignment._id.toString())
     );
@@ -218,7 +204,6 @@ exports.getStudentAssignments = async (req, res) => {
   }
 };
 
-// Delete/deactivate assignment
 exports.deleteAssignment = async (req, res) => {
   try {
     const assignment = await QuizAssignment.findOneAndUpdate(
@@ -248,7 +233,6 @@ exports.deleteAssignment = async (req, res) => {
   }
 };
 
-// Get students by program and semester (optional helper endpoint)
 exports.getStudentsByProgramSemester = async (req, res) => {
   try {
     const { program, semester } = req.query;

@@ -43,23 +43,23 @@ export default function TeacherResultsPage() {
   }, []);
 
   const fetchResults = async () => {
-  try {
-    setLoading(true);
-    // Change this endpoint
-    const response = await axios.get(
-      `${API_BASE_URL}/results/teacher/all`,
-      getAxiosConfig()
-    );
-    if (response.data.success) {
-      setStudentResults(response.data.data);
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        `${API_BASE_URL}/results/teacher/all`,
+        getAxiosConfig()
+      );
+      if (response.data.success) {
+        setStudentResults(response.data.data);
+      }
+    } catch (err) {
+      setError('Failed to load results');
+      console.error('Fetch results error:', err);
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    setError('Failed to load results');
-    console.error('Fetch results error:', err);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const fetchCourses = async () => {
     try {
@@ -81,7 +81,7 @@ export default function TeacherResultsPage() {
   });
 
   const handleExport = () => {
-    // Export filtered results to CSV
+
     const csvContent = [
       ['Student Name', 'Program', 'Semester', 'Course', 'Score', 'Percentage', 'Date'].join(','),
       ...filteredResults.map(result => [
@@ -122,13 +122,31 @@ export default function TeacherResultsPage() {
       <div className="min-vh-100 bg-light">
         <div className="container-fluid">
           <div className="row">
-            {/* Sidebar */}
+
             <div className="col-md-3 col-lg-2 bg-dark vh-100 p-0">
               <div className="p-3">
                 <div className="d-flex align-items-center mb-4 pb-3 border-bottom border-secondary">
-                  <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
-                       style={{ width: '40px', height: '40px' }}>
-                    <span className="text-white">👨‍🏫</span>
+                  <div className="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3"
+                    style={{ width: '40px', height: '40px' }}>
+                    <span className="text-white"><svg xmlns="http://www.w3.org/2000/svg"
+                      width="28" height="28"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round">
+
+
+                      <circle cx="12" cy="5" r="3"></circle>
+
+                      <path d="M6 20v-2c0-3 2-5 6-5s6 2 6 5v2"></path>
+
+                      <rect x="3" y="9" width="18" height="8" rx="1"></rect>
+
+                      <line x1="12" y1="9" x2="12" y2="12"></line>
+
+                    </svg></span>
                   </div>
                   <span className="fw-medium text-white">Teacher</span>
                 </div>
@@ -177,18 +195,45 @@ export default function TeacherResultsPage() {
                     </li>
                     <li className="nav-item mb-1">
                       <button
-                        className={`nav-link w-100 text-start border-0 d-flex align-items-center py-2 px-3 rounded text-light bg-transparent`}
+                        className="nav-link w-100 text-start border-0 d-flex align-items-center py-2 px-3 rounded text-light bg-transparent hover-danger"
+                        onClick={() => {
+
+                          localStorage.removeItem('token');
+                          localStorage.removeItem('user');
+
+                          window.location.href = '/';
+                        }}
+                        style={{
+                          transition: 'all 0.3s ease',
+                          cursor: 'pointer'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#dc3545';
+                          e.currentTarget.style.color = 'white';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = '#f8f9fa';
+                        }}
                       >
                         <span className="me-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="8" y1="6" x2="21" y2="6"></line>
-                            <line x1="8" y1="12" x2="21" y2="12"></line>
-                            <line x1="8" y1="18" x2="21" y2="18"></line>
-                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                          <svg xmlns="http://www.w3.org/2000/svg"
+                            width="20" height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="red"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+
                           </svg>
-                        </span> Settings
+
+                        </span>
+                        <span style={{ color: '#dc3545', fontWeight: '500' }}>Logout</span>
                       </button>
                     </li>
                   </ul>
@@ -249,7 +294,7 @@ export default function TeacherResultsPage() {
                         <div>
                           <p className="text-muted mb-1 small">Average Score</p>
                           <h3 className="fw-bold mb-0">
-                            {filteredResults.length > 0 
+                            {filteredResults.length > 0
                               ? (filteredResults.reduce((sum, r) => sum + r.percentage, 0) / filteredResults.length).toFixed(1)
                               : 0}%
                           </h3>
@@ -270,7 +315,7 @@ export default function TeacherResultsPage() {
                         <div>
                           <p className="text-muted mb-1 small">Highest Score</p>
                           <h3 className="fw-bold mb-0">
-                            {filteredResults.length > 0 
+                            {filteredResults.length > 0
                               ? Math.max(...filteredResults.map(r => r.percentage)).toFixed(1)
                               : 0}%
                           </h3>
@@ -292,7 +337,7 @@ export default function TeacherResultsPage() {
                         <div>
                           <p className="text-muted mb-1 small">Pass Rate</p>
                           <h3 className="fw-bold mb-0">
-                            {filteredResults.length > 0 
+                            {filteredResults.length > 0
                               ? ((filteredResults.filter(r => r.percentage >= 60).length / filteredResults.length) * 100).toFixed(1)
                               : 0}%
                           </h3>
@@ -321,7 +366,7 @@ export default function TeacherResultsPage() {
                   <div className="row g-3">
                     <div className="col-md-3">
                       <label className="form-label small fw-medium">Program</label>
-                      <select 
+                      <select
                         className="form-select"
                         value={selectedProgram}
                         onChange={(e) => setSelectedProgram(e.target.value)}
@@ -335,7 +380,7 @@ export default function TeacherResultsPage() {
                     </div>
                     <div className="col-md-3">
                       <label className="form-label small fw-medium">Semester</label>
-                      <select 
+                      <select
                         className="form-select"
                         value={selectedSemester}
                         onChange={(e) => setSelectedSemester(e.target.value)}
@@ -349,7 +394,7 @@ export default function TeacherResultsPage() {
                     </div>
                     <div className="col-md-3">
                       <label className="form-label small fw-medium">Course</label>
-                      <select 
+                      <select
                         className="form-select"
                         value={selectedCourse}
                         onChange={(e) => setSelectedCourse(e.target.value)}
@@ -421,8 +466,8 @@ export default function TeacherResultsPage() {
                             <tr key={result._id}>
                               <td className="py-3 ps-4">
                                 <div className="d-flex align-items-center">
-                                  <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2" 
-                                       style={{ width: '32px', height: '32px' }}>
+                                  <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
+                                    style={{ width: '32px', height: '32px' }}>
                                     <span className="small">👤</span>
                                   </div>
                                   <span className="fw-medium">{result.student?.fullName}</span>
@@ -449,7 +494,7 @@ export default function TeacherResultsPage() {
                                 })}
                               </td>
                               <td className="py-3 pe-4">
-                                <Link 
+                                <Link
                                   to={`/teacher/result/${result._id}`}
                                   className="btn btn-sm btn-outline-primary"
                                 >

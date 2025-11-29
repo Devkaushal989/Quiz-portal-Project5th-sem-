@@ -26,7 +26,6 @@ export default function StudentDashboard() {
         fetchQuizHistory();
     }, []);
 
-    // Fetch assigned quizzes from teacher
     const fetchAssignedQuizzes = async () => {
         try {
             setLoading(true);
@@ -36,7 +35,7 @@ export default function StudentDashboard() {
             );
             if (response.data.success) {
                 setAssignments(response.data.data);
-                // Extract unique courses from assignments
+
                 const assignedCourses = response.data.data.map(assignment => ({
                     ...assignment.course,
                     assignmentId: assignment._id,
@@ -68,7 +67,7 @@ export default function StudentDashboard() {
     };
 
     const handleStartQuiz = (courseId, assignmentId) => {
-        // Pass assignment ID if available for tracking
+
         if (assignmentId) {
             window.location.href = `/student/quiz/${courseId}?assignmentId=${assignmentId}`;
         } else {
@@ -184,18 +183,45 @@ export default function StudentDashboard() {
                                         </li>
                                         <li className="nav-item mb-1">
                                             <button
-                                                className={`nav-link w-100 text-start border-0 d-flex align-items-center py-2 px-3 rounded text-light bg-transparent`}
+                                                className="nav-link w-100 text-start border-0 d-flex align-items-center py-2 px-3 rounded text-light bg-transparent hover-danger"
+                                                onClick={() => {
+                                                    // Clear all authentication data
+                                                    localStorage.removeItem('token');
+                                                    localStorage.removeItem('user');
+                                                    // Redirect to login page
+                                                    window.location.href = '/';
+                                                }}
+                                                style={{
+                                                    transition: 'all 0.3s ease',
+                                                    cursor: 'pointer'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundColor = '#dc3545';
+                                                    e.currentTarget.style.color = 'white';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                    e.currentTarget.style.color = '#f8f9fa';
+                                                }}
                                             >
                                                 <span className="me-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                        <line x1="8" y1="6" x2="21" y2="6"></line>
-                                                        <line x1="8" y1="12" x2="21" y2="12"></line>
-                                                        <line x1="8" y1="18" x2="21" y2="18"></line>
-                                                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                                                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                                                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        width="20" height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="red"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round">
+
+                                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+
                                                     </svg>
-                                                </span> Settings
+
+                                                </span>
+                                                <span style={{ color: '#dc3545', fontWeight: '500' }}>Logout</span>
                                             </button>
                                         </li>
                                     </ul>

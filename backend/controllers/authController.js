@@ -11,7 +11,6 @@ exports.signup = async (req, res) => {
   try {
     const { fullName, email, password, userType, program, semester } = req.body;
 
-    // Basic validation
     if (!fullName || !email || !password || !userType) {
       return res.status(400).json({
         success: false,
@@ -19,7 +18,6 @@ exports.signup = async (req, res) => {
       });
     }
 
-    // Additional validation for students
     if (userType === 'Student') {
       if (!program || !semester) {
         return res.status(400).json({
@@ -37,7 +35,6 @@ exports.signup = async (req, res) => {
       });
     }
 
-    // Create user data object
     const userData = {
       fullName,
       email,

@@ -5,7 +5,6 @@ const Course = require('../models/Course');
 // Get all quiz results for teacher
 exports.getTeacherResults = async (req, res) => {
   try {
-    // Find all quiz attempts and populate student and course details
     const results = await QuizAttempt.find({ status: 'completed' })
       .populate('student', 'fullName email program semester')
       .populate('course', 'courseName duration')
@@ -27,12 +26,10 @@ exports.getTeacherResults = async (req, res) => {
   }
 };
 
-// Get results by program and semester
 exports.getResultsByProgramSemester = async (req, res) => {
   try {
     const { program, semester, courseId } = req.query;
 
-    // First, find students matching the criteria
     const studentQuery = { userType: 'Student' };
     if (program && program !== 'All Programs') studentQuery.program = program;
     if (semester && semester !== 'All Semesters') studentQuery.semester = semester;
@@ -40,14 +37,12 @@ exports.getResultsByProgramSemester = async (req, res) => {
     const students = await User.find(studentQuery).select('_id');
     const studentIds = students.map(s => s._id);
 
-    // Build filter for quiz attempts
     const attemptFilter = { 
       student: { $in: studentIds },
       status: 'completed'
     };
     if (courseId) attemptFilter.course = courseId;
 
-    // Find quiz attempts for these students
     const results = await QuizAttempt.find(attemptFilter)
       .populate('student', 'fullName email program semester')
       .populate('course', 'courseName duration')
@@ -69,7 +64,6 @@ exports.getResultsByProgramSemester = async (req, res) => {
   }
 };
 
-// Get detailed result for a specific attempt
 exports.getResultDetails = async (req, res) => {
   try {
     const { attemptId } = req.params;
@@ -104,19 +98,16 @@ exports.getResultDetails = async (req, res) => {
   }
 };
 
-// Get statistics for dashboard
 exports.getResultStatistics = async (req, res) => {
   try {
     const { courseId, program, semester } = req.query;
 
-    // Build filter query
     const filter = { status: 'completed' };
     if (courseId) filter.course = courseId;
 
     let results = await QuizAttempt.find(filter)
       .populate('student', 'program semester');
 
-    // Filter by program and semester if provided
     if (program || semester) {
       results = results.filter(result => {
         const student = result.student;
@@ -129,7 +120,6 @@ exports.getResultStatistics = async (req, res) => {
       });
     }
 
-    // Calculate statistics
     const totalAttempts = results.length;
     const averageScore = totalAttempts > 0 
       ? results.reduce((sum, r) => sum + r.percentage, 0) / totalAttempts 
@@ -168,7 +158,6 @@ exports.getResultStatistics = async (req, res) => {
   }
 };
 
-// Export results to CSV (data preparation)
 exports.prepareResultsExport = async (req, res) => {
   try {
     const { program, semester, courseId } = req.query;
@@ -181,7 +170,6 @@ exports.prepareResultsExport = async (req, res) => {
       .populate('course', 'courseName')
       .sort({ completedAt: -1 });
 
-    // Filter by program and semester if provided
     if (program || semester) {
       results = results.filter(result => {
         const student = result.student;
@@ -208,7 +196,6 @@ exports.prepareResultsExport = async (req, res) => {
   }
 };
 
-// Get student's own quiz history
 exports.getStudentQuizHistory = async (req, res) => {
   try {
     const studentId = req.user._id;
@@ -236,7 +223,6 @@ exports.getStudentQuizHistory = async (req, res) => {
   }
 };
 
-// Get leaderboard by course
 exports.getLeaderboard = async (req, res) => {
   try {
     const { courseId, program, semester, limit = 10 } = req.query;
@@ -249,7 +235,6 @@ exports.getLeaderboard = async (req, res) => {
       .populate('course', 'courseName')
       .sort({ percentage: -1, completedAt: 1 });
 
-    // Filter by program and semester if provided
     if (program || semester) {
       results = results.filter(result => {
         const student = result.student;
@@ -262,7 +247,6 @@ exports.getLeaderboard = async (req, res) => {
       });
     }
 
-    // Get top performers (remove duplicates, keep best attempt per student)
     const studentBestAttempts = new Map();
     results.forEach(result => {
       const studentId = result.student._id.toString();

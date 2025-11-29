@@ -4,7 +4,7 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:8700/api';
 
 export default function AssignQuizModal({ show, onClose, courseId, courseName }) {
-    const [assignmentType, setAssignmentType] = useState('program'); // 'program', 'individual', or 'all'
+    const [assignmentType, setAssignmentType] = useState('program'); 
     const [students, setStudents] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);
     const [selectedProgram, setSelectedProgram] = useState('');
