@@ -16,7 +16,6 @@ export default function AssignQuizModal({ show, onClose, courseId, courseName })
     const [successMessage, setSuccessMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Program and Semester options
     const programs = [
         'B.Tech',
         'BCA',
