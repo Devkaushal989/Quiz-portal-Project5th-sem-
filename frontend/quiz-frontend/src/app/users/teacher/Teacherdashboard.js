@@ -2,169 +2,186 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import AssignQuizModal from './AssignQuizModal';
+import quizLogo from '../../images/quiz_logo.png';
 const API_BASE_URL = 'http://localhost:8700/api';
 
 const Sidebar = ({
-  role,
-  activeTab,
-  profileDetail1Label,
-  profileDetail1Value,
-  profileDetail2Label,
-  profileDetail2Value,
-  navItems,
-  onNavClick
+    role,
+    activeTab,
+    profileDetail1Label,
+    profileDetail1Value,
+    profileDetail2Label,
+    profileDetail2Value,
+    navItems,
+    onNavClick
 }) => {
-  const getUserData = () => {
-    try {
-      return JSON.parse(localStorage.getItem('user') || '{}');
-    } catch (e) {
-      console.error("Error parsing user data from localStorage:", e);
-      return {};
-    }
-  };
+    const getUserData = () => {
+        try {
+            return JSON.parse(localStorage.getItem('user') || '{}');
+        } catch (e) {
+            console.error("Error parsing user data from localStorage:", e);
+            return {};
+        }
+    };
 
-  const user = getUserData();
-  const accountType = role === 'teacher' ? 'Teacher Account' : 'Student Account';
+    const user = getUserData();
+    const accountType = role === 'teacher' ? 'Teacher Account' : 'Student Account';
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/';
-  };
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/';
+    };
 
-  const navLinkStyle = (isActive) => ({
-    backgroundColor: isActive ? '#198754' : 'transparent',
-    color: isActive ? 'white' : '#f7f9fcff',
-    transition: 'all 0.3s ease-in-out',
-    boxShadow: isActive ? '0 4px 10px rgba(25, 135, 84, 0.4)' : 'none',
-  });
+    const navLinkStyle = (isActive) => ({
+        backgroundColor: isActive ? '#198754' : 'transparent',
+        color: isActive ? 'white' : '#f7f9fcff',
+        transition: 'all 0.3s ease-in-out',
+        boxShadow: isActive ? '0 4px 10px rgba(25, 135, 84, 0.4)' : 'none',
+    });
 
-  const navLinkHoverStyle = (e, isActive) => {
-    if (!isActive) {
-      e.currentTarget.style.backgroundColor = '#0d0d0dff';
-      e.currentTarget.style.color = '#f7f9fcff';
-    }
-  };
+    const navLinkHoverStyle = (e, isActive) => {
+        if (!isActive) {
+            e.currentTarget.style.backgroundColor = '#0d0d0dff';
+            e.currentTarget.style.color = '#f7f9fcff';
+        }
+    };
 
-  const navLinkLeaveStyle = (e, isActive) => {
-    if (!isActive) {
-      e.currentTarget.style.backgroundColor = 'transparent';
-      e.currentTarget.style.color = '#f7f9fcff';
-    }
-  };
+    const navLinkLeaveStyle = (e, isActive) => {
+        if (!isActive) {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = '#f7f9fcff';
+        }
+    };
 
-  return (
-    <div
-      className="bg-dark border-end"
-      style={{
-        width: '280px',
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        height: '100vh',
-        overflowY: 'auto',
-        zIndex: 1000
-      }}
-    >
-      <div className="text-center pt-4 pb-3 border-bottom">
-        <div className="d-flex justify-content-center mb-3">
-          <div
-            className="rounded-circle bg-light d-flex align-items-center justify-content-center position-relative"
-            style={{ width: '100px', height: '100px', border: '3px solid #ffffffff' }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#6c757d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <div
-              className="position-absolute bg-success text-white px-2 py-1 rounded"
-              style={{ bottom: '0', fontSize: '10px', fontWeight: 'bold' }}
-            >
-              2025-26
-            </div>
-          </div>
-        </div>
-        <h6 className="fw-bold mb-1" style={{ color: '#f4f6f9ff' }}>
-          {user?.fullName || 'Teacher Name'}
-        </h6>
-        <p className="text-light small mb-3">{accountType}</p>
-        <div className="d-flex justify-content-center gap-3 px-3">
-          {/* Detail 1: Department (Teacher Specific) */}
-          <div className="text-center flex-fill">
-            <div className="bg-light rounded p-2">
-              <small className="text-muted d-block" style={{ fontSize: '10px' }}>{profileDetail1Label}</small>
-              <small className="fw-bold text-dark">{profileDetail1Value || 'N/A'}</small>
-            </div>
-          </div>
-          {/* Detail 2: Status (Teacher Specific) */}
-          <div className="text-center flex-fill">
-            <div className="bg-light rounded p-2">
-              <small className="text-muted d-block" style={{ fontSize: '10px' }}>{profileDetail2Label}</small>
-              <small className={`fw-bold text-success`}>{profileDetail2Value || 'Active'}</small>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Menu */}
-      <nav className="py-3">
-        <ul className="nav flex-column px-2">
-          {navItems.map((item) => {
-            const isActive = activeTab === item.label;
-            return (
-              <li className="nav-item mb-1" key={item.label}>
-                {item.isExternal ? (
-                  <Link to={item.path} className='text-decoration-none'>
-                    <button
-                      className="nav-link w-100 text-start border-0 d-flex align-items-center py-3 px-3 rounded sidebar-nav-btn"
-                      style={navLinkStyle(isActive)}
-                      onMouseEnter={(e) => navLinkHoverStyle(e, isActive)}
-                      onMouseLeave={(e) => navLinkLeaveStyle(e, isActive)}
+    return (
+        <div
+            className="bg-dark border-end"
+            style={{
+                width: '280px',
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                height: '100vh',
+                overflowY: 'auto',
+                zIndex: 1000
+            }}
+        >
+            {/* Logo Section */}
+                        <div className="py-3 px-3 border-bottom d-flex align-items-center gap-3 ">
+                            <img 
+                                src={quizLogo} 
+                                alt="Quiz Logo" 
+                                style={{
+                                    width: '50px',
+                                    height: 'auto',
+                                    objectFit: 'contain',
+                                      borderRadius: '8px'
+                                }}
+                            />
+                            <h4 className="fw-bold mb-0" style={{ color: '#f4f6f9ff' }}>
+                                Quiz-o-Tron
+                            </h4>
+                        </div>
+            <div className="text-center pt-4 pb-3 border-bottom">
+                <div className="d-flex justify-content-center mb-3">
+                    <div
+                        className="rounded-circle bg-light d-flex align-items-center justify-content-center position-relative"
+                        style={{ width: '100px', height: '100px'}}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="me-3" dangerouslySetInnerHTML={{ __html: item.svgPath }} />
-                      <span className="fw-medium">{item.label}</span>
-                    </button>
-                  </Link>
-                ) : (
-                  <button
-                    className="nav-link w-100 text-start border-0 d-flex align-items-center py-3 px-3 rounded sidebar-nav-btn"
-                    style={navLinkStyle(isActive)}
-                    onClick={(e) => {
-                        if (onNavClick) {
-                            onNavClick(item.label);
-                        }
-                    }}
-                    onMouseEnter={(e) => navLinkHoverStyle(e, isActive)}
-                    onMouseLeave={(e) => navLinkLeaveStyle(e, isActive)}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="me-3" dangerouslySetInnerHTML={{ __html: item.svgPath }} />
-                    <span className="fw-medium">{item.label}</span>
-                  </button>
-                )}
-              </li>
-            );
-          })}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#6c757d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <div
+                            className="position-absolute bg-success text-white px-2 py-1 rounded"
+                            style={{ bottom: '0', fontSize: '10px', fontWeight: 'bold' }}
+                        >
+                            2025-26
+                        </div>
+                    </div>
+                </div>
+                <h6 className="fw-bold mb-1" style={{ color: '#f4f6f9ff' }}>
+                    {user?.fullName || 'Teacher Name'}
+                </h6>
+                <p className="text-light small mb-3">{accountType}</p>
+                <div className="d-flex justify-content-center gap-3 px-3">
+                    {/* Detail 1: Department (Teacher Specific) */}
+                    <div className="text-center flex-fill">
+                        <div className="bg-light rounded p-2">
+                            <small className="text-muted d-block" style={{ fontSize: '10px' }}>{profileDetail1Label}</small>
+                            <small className="fw-bold text-dark">{profileDetail1Value || 'N/A'}</small>
+                        </div>
+                    </div>
+                    {/* Detail 2: Status (Teacher Specific) */}
+                    <div className="text-center flex-fill">
+                        <div className="bg-light rounded p-2">
+                            <small className="text-muted d-block" style={{ fontSize: '10px' }}>{profileDetail2Label}</small>
+                            <small className={`fw-bold text-success`}>{profileDetail2Value || 'Active'}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-          <li className="nav-item mb-1">
-            <button
-              className="nav-link w-100 text-start border-0 d-flex align-items-center py-3 px-3 rounded logout-btn"
-              onClick={handleLogout}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc3545" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="me-3 logout-svg">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-              <span className="fw-medium">Logout</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  );
+            {/* Navigation Menu */}
+            <nav className="py-3">
+                <ul className="nav flex-column px-2">
+                    {navItems.map((item) => {
+                        const isActive = activeTab === item.label;
+                        return (
+                            <li className="nav-item mb-1" key={item.label}>
+                                {item.isExternal ? (
+                                    <Link to={item.path} className='text-decoration-none'>
+                                        <button
+                                            className="nav-link w-100 text-start border-0 d-flex align-items-center py-3 px-3 rounded sidebar-nav-btn"
+                                            style={navLinkStyle(isActive)}
+                                            onMouseEnter={(e) => navLinkHoverStyle(e, isActive)}
+                                            onMouseLeave={(e) => navLinkLeaveStyle(e, isActive)}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="me-3" dangerouslySetInnerHTML={{ __html: item.svgPath }} />
+                                            <span className="fw-medium">{item.label}</span>
+                                        </button>
+                                    </Link>
+                                ) : (
+                                    <button
+                                        className="nav-link w-100 text-start border-0 d-flex align-items-center py-3 px-3 rounded sidebar-nav-btn"
+                                        style={navLinkStyle(isActive)}
+                                        onClick={(e) => {
+                                            if (onNavClick) {
+                                                onNavClick(item.label);
+                                            }
+                                        }}
+                                        onMouseEnter={(e) => navLinkHoverStyle(e, isActive)}
+                                        onMouseLeave={(e) => navLinkLeaveStyle(e, isActive)}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="me-3" dangerouslySetInnerHTML={{ __html: item.svgPath }} />
+                                        <span className="fw-medium">{item.label}</span>
+                                    </button>
+                                )}
+                            </li>
+                        );
+                    })}
+
+                    <li className="nav-item mb-1">
+                        <button
+                            className="nav-link w-100 text-start border-0 d-flex align-items-center py-3 px-3 rounded logout-btn"
+                            onClick={handleLogout}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc3545" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="me-3 logout-svg">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span className="fw-medium">Logout</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    );
 };
 export default function TeacherDashboard() {
-    const [activeTab, setActiveTab] = useState('Dashboard'); 
+    const [activeTab, setActiveTab] = useState('Dashboard');
     const [showQuestionPoolModal, setShowQuestionPoolModal] = useState(false);
     const [showCourseModal, setShowCourseModal] = useState(false);
     const [showAddQuestionModal, setShowAddQuestionModal] = useState(false);
@@ -180,23 +197,23 @@ export default function TeacherDashboard() {
     const teacherInfo = JSON.parse(localStorage.getItem('user') || '{}');
 
     const teacherNavItems = [
-        { 
-            label: 'Dashboard', 
-            path: '#dashboard', 
+        {
+            label: 'Dashboard',
+            path: '#dashboard',
             svgPath: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>',
-            isExternal: false 
+            isExternal: false
         },
-        { 
-            label: 'Courses/Exams', 
-            path: '#courses-exams', 
+        {
+            label: 'Courses/Exams',
+            path: '#courses-exams',
             svgPath: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>',
-            isExternal: false 
+            isExternal: false
         },
-        { 
-            label: 'Results', 
-            path: '/teacher/result', 
+        {
+            label: 'Results',
+            path: '/teacher/result',
             svgPath: '<polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>',
-            isExternal: true 
+            isExternal: true
         }
     ];
 
@@ -556,7 +573,23 @@ export default function TeacherDashboard() {
                                 <div className="card border-0 shadow-sm stat-card">
                                     <div className="card-body text-center">
                                         <div className="mb-2">
-                                            <span className="text-primary" style={{ fontSize: '32px' }}>📚</span>
+                                            <span className="text-primary" style={{ fontSize: '32px' }}><svg xmlns="http://www.w3.org/2000/svg"
+                                                width="28" height="28"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round">
+
+                                                <path d="M4 19h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H4z"></path>
+
+                                                <path d="M10 19h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4z"></path>
+
+                                                <path d="M16 17l3 1.5a2 2 0 0 0 2-1l1-2a2 2 0 0 0-1-2.5L17 10"></path>
+
+                                            </svg>
+                                            </span>
                                         </div>
                                         <h3 className="text-primary mb-1">{coursesData.length}</h3>
                                         <p className="text-muted mb-0 small">Total Courses</p>
@@ -567,7 +600,26 @@ export default function TeacherDashboard() {
                                 <div className="card border-0 shadow-sm stat-card">
                                     <div className="card-body text-center">
                                         <div className="mb-2">
-                                            <span className="text-success" style={{ fontSize: '32px' }}>📝</span>
+                                            <span className="text-success" style={{ fontSize: '32px' }}><svg xmlns="http://www.w3.org/2000/svg"
+                                                width="28" height="28"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round">
+
+                                                <rect x="4" y="3" width="14" height="18" rx="2" ry="2"></rect>
+
+                                                <line x1="8" y1="8" x2="14" y2="8"></line>
+                                                <line x1="8" y1="12" x2="14" y2="12"></line>
+                                                <line x1="8" y1="16" x2="12" y2="16"></line>
+
+                                                <path d="M18 14l2 2-4 4-2-2z"></path>
+                                                <line x1="17" y1="13" x2="20" y2="16"></line>
+
+                                            </svg>
+                                            </span>
                                         </div>
                                         <h3 className="text-success mb-1">{questionPools.length}</h3>
                                         <p className="text-muted mb-0 small">Total Question Pools</p>
@@ -578,7 +630,22 @@ export default function TeacherDashboard() {
                                 <div className="card border-0 shadow-sm stat-card">
                                     <div className="card-body text-center">
                                         <div className="mb-2">
-                                            <span className="text-warning" style={{ fontSize: '32px' }}>📊</span>
+                                            <span className="text-warning" style={{ fontSize: '32px' }}><svg xmlns="http://www.w3.org/2000/svg"
+                                                width="28" height="28"
+                                                viewBox="0 0 24 24"
+                                                role="img" aria-label="Bar chart"
+                                                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+
+                                                <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
+
+                                                <g fill="currentColor" stroke="none">
+                                                    <rect x="6" y="11" width="2.8" height="7"></rect>
+                                                    <rect x="11" y="7" width="2.8" height="11"></rect>
+                                                    <rect x="15.8" y="4" width="2.8" height="14"></rect>
+                                                </g>
+
+                                            </svg>
+                                            </span>
                                         </div>
                                         <h3 className="text-warning mb-1">View Results</h3>
                                         <p className="text-muted mb-0 small">Analyze Student Performance</p>
@@ -586,7 +653,7 @@ export default function TeacherDashboard() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div className="mt-5">
                             <h5 className="fw-bold mb-3">Recent Activity</h5>
                             <div className="alert alert-info">
@@ -933,9 +1000,9 @@ export default function TeacherDashboard() {
                 }
                 `}
             </style>
-          
+
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossOrigin="anonymous" />
-            
+
             <div className="d-flex" style={{ height: '100vh', overflow: 'hidden' }}>
                 {/* Fixed Sidebar */}
                 <Sidebar
@@ -957,13 +1024,13 @@ export default function TeacherDashboard() {
                     }}
                 >
                     {successMessage && (
-                        <div className="alert alert-success alert-dismissible fade show m-4 sticky-top" role="alert" style={{zIndex: 10}}>
+                        <div className="alert alert-success alert-dismissible fade show m-4 sticky-top" role="alert" style={{ zIndex: 10 }}>
                             {successMessage}
                             <button type="button" className="btn-close" onClick={() => setSuccessMessage('')}></button>
                         </div>
                     )}
                     {error && (
-                        <div className="alert alert-danger alert-dismissible fade show m-4 sticky-top" role="alert" style={{zIndex: 10}}>
+                        <div className="alert alert-danger alert-dismissible fade show m-4 sticky-top" role="alert" style={{ zIndex: 10 }}>
                             {error}
                             <button type="button" className="btn-close" onClick={() => setError('')}></button>
                         </div>

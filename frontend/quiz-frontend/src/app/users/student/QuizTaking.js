@@ -216,9 +216,9 @@ export default function QuizTaking() {
             <div className="card border-0 shadow-sm mb-4">
               <div className="card-body p-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  <span className={`badge bg-${currentQ.difficulty === 'easy' ? 'success' : currentQ.difficulty === 'medium' ? 'warning' : 'danger'}`}>
+                  {/* <span className={`badge bg-${currentQ.difficulty === 'easy' ? 'success' : currentQ.difficulty === 'medium' ? 'warning' : 'danger'}`}>
                     {currentQ.difficulty.toUpperCase()}
-                  </span>
+                  </span> */}
                   <span className="text-muted">Marks: {currentQ.marks}</span>
                 </div>
 

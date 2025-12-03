@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './loginpage.css';
+import quizLogo from '../../images/quiz_logo.png';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8700/api';
@@ -139,8 +140,10 @@ export default function AuthPage() {
 
     return (
         <>
+        
             <div className="min-vh-100 d-flex align-items-center justify-content-center p-4" 
                 style={{ backgroundColor: 'rgba(36,105,92,0.1)' }}>
+                    
                 <div className="bg-white shadow-lg w-100 mycontainer" style={{ maxWidth: '900px' }}>
                     <div className="p-5">
                         

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import quizLogo from '../../images/quiz_logo.png';
 const Sidebar = ({
     role,
     activeTab,
@@ -64,6 +65,22 @@ const Sidebar = ({
                 zIndex: 1000
             }}
         >
+             {/* Logo Section */}
+            <div className="py-3 px-3 border-bottom d-flex align-items-center gap-3 ">
+                <img 
+                    src={quizLogo} 
+                    alt="Quiz Logo" 
+                    style={{
+                        width: '50px',
+                        height: 'auto',
+                        objectFit: 'contain',
+                          borderRadius: '8px'
+                    }}
+                />
+                <h4 className="fw-bold mb-0" style={{ color: '#f4f6f9ff' }}>
+                    Quiz-o-Tron
+                </h4>
+            </div>
             <div className="text-center pt-4 pb-3 border-bottom">
                 <div className="d-flex justify-content-center mb-3">
                     <div
@@ -78,7 +95,7 @@ const Sidebar = ({
                             className="position-absolute bg-primary text-white px-2 py-1 rounded"
                             style={{ bottom: '0', fontSize: '10px', fontWeight: 'bold' }}
                         >
-                            Current Year
+                           2025-26
                         </div>
                     </div>
                 </div>
@@ -427,7 +444,7 @@ export default function StudentDashboard() {
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossOrigin="anonymous" />
 
             <div className="d-flex" style={{ height: '100vh', overflow: 'hidden' }}>
-                {/* Sidebar Component */}
+               
                 <Sidebar
                     role="student"
                     activeTab={activeTab}
@@ -439,7 +456,6 @@ export default function StudentDashboard() {
                     onNavClick={handleSidebarNav}
                 />
 
-                {/* Scrollable Main Content */}
                 <div
                     className="flex-grow-1 bg-light"
                     style={{

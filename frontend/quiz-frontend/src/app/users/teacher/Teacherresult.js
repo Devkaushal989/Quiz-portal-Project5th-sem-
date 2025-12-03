@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
+import quizLogo from '../../images/quiz_logo.png';
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8700/api';
@@ -123,6 +124,22 @@ export default function TeacherResultsPage() {
             zIndex: 1000
           }}
         >
+          {/* Logo Section */}
+                      <div className="py-3 px-3 border-bottom d-flex align-items-center gap-3 ">
+                          <img 
+                              src={quizLogo} 
+                              alt="Quiz Logo" 
+                              style={{
+                                  width: '50px',
+                                  height: 'auto',
+                                  objectFit: 'contain',
+                                    borderRadius: '8px'
+                              }}
+                          />
+                          <h4 className="fw-bold mb-0" style={{ color: '#f4f6f9ff' }}>
+                              Quiz-o-Tron
+                          </h4>
+                      </div>
           {/* Profile Section */}
           <div className="text-center pt-4 pb-3 border-bottom">
             <div className="d-flex justify-content-center mb-3">
