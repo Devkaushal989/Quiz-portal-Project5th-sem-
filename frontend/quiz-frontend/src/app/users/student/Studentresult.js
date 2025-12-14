@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import Quiz_Logo from '../../images/quiz_logo.png';
 // import './student_result.css';
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 
 export default function StudentResultsPage() {
   const [activeTab, setActiveTab] = useState('My Results');
@@ -33,7 +33,7 @@ export default function StudentResultsPage() {
     try {
       setLoadingHistory(true);
       // keep this endpoint (your routes map to /quiz/history under student)
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/student/quiz/history`, axiosConfig());
+      const res = await axios.get(`${API_BASE_URL}/student/quiz/history`, axiosConfig());
       if (res.data.success) {
         setHistory(res.data.data || []);
       } else {
@@ -56,7 +56,7 @@ export default function StudentResultsPage() {
       setShowModal(true);
 
       // <-- FIXED: correct backend route (matches your student.js router)
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/student/quiz/result/${attemptId}`, axiosConfig());
+      const res = await axios.get(`${API_BASE_URL}/student/quiz/result/${attemptId}`, axiosConfig());
 
       if (res.data.success) {
         // controller returns cleaned attempt object in res.data.data

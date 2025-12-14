@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import quizLogo from '../../images/quiz_logo.png';
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 
 const Sidebar = ({
     activeTab,
@@ -199,10 +199,7 @@ export default function AdminDashboard() {
 
     const fetchTeachers = async () => {
         try {
-            const response = await axios.get(
-  `${process.env.REACT_APP_API_URL}/admin/teachers`,
-  getAxiosConfig()
-);;
+            const response = await axios.get(`${API_BASE_URL}/admin/teachers`, getAxiosConfig());
             if (response.data.success) {
                 setTeachers(response.data.data);
             }
@@ -213,11 +210,7 @@ export default function AdminDashboard() {
 
     const fetchStudents = async () => {
         try {
-            const response = await axios.get(
-  `${process.env.REACT_APP_API_URL}/admin/students`,
-  getAxiosConfig()
-);
-
+            const response = await axios.get(`${API_BASE_URL}/admin/students`, getAxiosConfig());
             if (response.data.success) {
                 setStudents(response.data.data);
             }
@@ -228,11 +221,7 @@ export default function AdminDashboard() {
 
     const fetchAssignments = async () => {
         try {
-            const response = await axios.get(
-  `${process.env.REACT_APP_API_URL}/admin/assignments`,
-  getAxiosConfig()
-);
-
+            const response = await axios.get(`${API_BASE_URL}/admin/assignments`, getAxiosConfig());
             if (response.data.success) {
                 setAssignments(response.data.data);
             }
@@ -243,11 +232,7 @@ export default function AdminDashboard() {
 
     const fetchStats = async () => {
         try {
-            const response = await axios.get(
-  `${process.env.REACT_APP_API_URL}/admin/stats`,
-  getAxiosConfig()
-);
-
+            const response = await axios.get(`${API_BASE_URL}/admin/stats`, getAxiosConfig());
             if (response.data.success) {
                 setStats(response.data.data);
             }
@@ -273,13 +258,13 @@ export default function AdminDashboard() {
 
         try {
             const response = await axios.post(
-  `${process.env.REACT_APP_API_URL}/admin/register-teacher`,
-  {
-    ...teacherForm,
-    userType: 'Teacher'
-  },
-  getAxiosConfig()
-);
+                `${API_BASE_URL}/admin/register-teacher`,
+                {
+                    ...teacherForm,
+                    userType: 'Teacher'
+                },
+                getAxiosConfig()
+            );
 
             if (response.data.success) {
                 setSuccessMessage('Teacher registered successfully!');
@@ -305,10 +290,9 @@ export default function AdminDashboard() {
 
         try {
             const response = await axios.delete(
-  `${process.env.REACT_APP_API_URL}/admin/teachers/${teacherId}`,
-  getAxiosConfig()
-);
-
+                `${API_BASE_URL}/admin/teachers/${teacherId}`,
+                getAxiosConfig()
+            );
 
             if (response.data.success) {
                 setSuccessMessage('Teacher deleted successfully!');
@@ -325,10 +309,9 @@ export default function AdminDashboard() {
 
         try {
             const response = await axios.delete(
-  `${process.env.REACT_APP_API_URL}/admin/students/${studentId}`,
-  getAxiosConfig()
-);
-
+                `${API_BASE_URL}/admin/students/${studentId}`,
+                getAxiosConfig()
+            );
 
             if (response.data.success) {
                 setSuccessMessage('Student deleted successfully!');

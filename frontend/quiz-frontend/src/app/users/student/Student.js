@@ -174,7 +174,7 @@ const Sidebar = ({
     );
 };
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 
 export default function StudentDashboard() {
     const [activeTab, setActiveTab] = useState('Dashboard');
@@ -238,7 +238,7 @@ export default function StudentDashboard() {
         try {
             setLoading(true);
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/assignments/student/assignments`,
+                `${API_BASE_URL}/assignments/student/assignments`,
                 getAxiosConfig()
             );
             if (response.data.success) {
@@ -263,7 +263,7 @@ export default function StudentDashboard() {
     const fetchQuizHistory = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/student/quiz/history`,
+                `${API_BASE_URL}/student/quiz/history`,
                 getAxiosConfig()
             );
             if (response.data.success) {
@@ -383,7 +383,7 @@ export default function StudentDashboard() {
             setSelectedAttempt(null);
             setShowModal(true);
 
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/student/quiz/result/${attemptId}`, getAxiosConfig());
+            const res = await axios.get(`${API_BASE_URL}/student/quiz/result/${attemptId}`, getAxiosConfig());
             if (res.data?.success) {
                 const normalized = normalizeAttempt(res.data.data || {});
                 setSelectedAttempt(normalized);

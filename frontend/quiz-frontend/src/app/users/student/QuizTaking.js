@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 
 export default function QuizTaking() {
   const { courseId } = useParams();
@@ -74,7 +74,7 @@ export default function QuizTaking() {
       try {
         setLoading(true);
         const scheduleResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/student/quiz/schedule/${courseId}`,
+          `${API_BASE_URL}/student/quiz/schedule/${courseId}`,
           getAxiosConfig()
         );
 
@@ -221,14 +221,13 @@ export default function QuizTaking() {
       }));
 
       const response = await axios.post(
-  `${process.env.REACT_APP_API_URL}/student/quiz/submit/${quiz.attemptId}`,
-  {
-    answers: formattedAnswers,
-    timeTaken
-  },
-  getAxiosConfig()
-);
-
+        `${API_BASE_URL}/student/quiz/submit/${quiz.attemptId}`,
+        {
+          answers: formattedAnswers,
+          timeTaken
+        },
+        getAxiosConfig()
+      );
 
       if (response.data.success) {
         navigate('/student');

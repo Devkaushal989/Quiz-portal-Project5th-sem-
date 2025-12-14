@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 
 export default function AssignQuizModal({ show, onClose, courseId, courseName }) {
     const [assignmentType, setAssignmentType] = useState('program'); 
@@ -44,7 +44,7 @@ export default function AssignQuizModal({ show, onClose, courseId, courseName })
     const fetchStudents = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/assignments/students`,
+                `${API_BASE_URL}/assignments/students`,
                 getAxiosConfig()
             );
             if (response.data.success) {
@@ -91,7 +91,7 @@ export default function AssignQuizModal({ show, onClose, courseId, courseName })
             }
 
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/assignments/assign`,
+                `${API_BASE_URL}/assignments/assign`,
                 {
                     courseId: courseId,
                     studentIds: studentIdsToAssign,

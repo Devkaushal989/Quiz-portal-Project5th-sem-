@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 
 export default function QuizResult() {
     const { attemptId } = useParams();
@@ -27,10 +27,9 @@ export default function QuizResult() {
         try {
             setLoading(true);
             const response = await axios.get(
-  `${process.env.REACT_APP_API_URL}/student/quiz/result/${attemptId}`,
-  getAxiosConfig()
-);
-
+                `${API_BASE_URL}/student/quiz/result/${attemptId}`,
+                getAxiosConfig()
+            );
 
             if (response.data.success) {
                 setResult(response.data.data);

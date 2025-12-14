@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api'
 import quizLogo from '../../images/quiz_logo.png';
 
 const Sidebar = ({
@@ -238,7 +238,7 @@ export default function TeacherResultsPage() {
         try {
             setLoading(true);
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/results/teacher/all`,
+                `${API_BASE_URL}/results/teacher/all`,
                 getAxiosConfig()
             );
             if (response.data.success) {
@@ -254,7 +254,7 @@ export default function TeacherResultsPage() {
 
     const fetchCourses = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/courses`, getAxiosConfig());
+            const response = await axios.get(`${API_BASE_URL}/courses`, getAxiosConfig());
             if (response.data.success) {
                 setCourses(['All Courses', ...response.data.data.map(c => c.courseName)]);
             }

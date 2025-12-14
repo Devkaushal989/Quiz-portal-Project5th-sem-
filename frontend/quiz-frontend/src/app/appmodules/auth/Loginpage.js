@@ -4,7 +4,7 @@ import './loginpage.css';
 import quizLogo from '../../images/quiz_logo.png';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 
 export default function AuthPage() {
     const [userType, setUserType] = useState('Student');
@@ -64,10 +64,7 @@ export default function AuthPage() {
                 signupData.semester = formData.semester;
             }
 
-            const response = await axios.post(
-  `${process.env.REACT_APP_API_URL}/api/auth/login`,
-  data
-);
+            const response = await axios.post(`${API_BASE_URL}/auth/signup`, signupData);
 
             if (response.data.success) {
                 setSuccessMessage('Registration successful! Redirecting...');
@@ -312,11 +309,11 @@ export default function AuthPage() {
                                                 disabled={loading}
                                             />
                                         </div>
-                                        <div className="text-center mb-3 fs-5">
+                                        {/* <div className="text-center mb-3 fs-5">
                                             <a href="#forgot" className="text-muted text-decoration-none small mt-2">
                                                 Forgot Password?
                                             </a>
-                                        </div>
+                                        </div> */}
                                         <button
                                             type="submit"
                                             className="btn btn-success w-100 logup_button"
@@ -368,11 +365,11 @@ export default function AuthPage() {
                                                 disabled={loading}
                                             />
                                         </div>
-                                        <div className="text-center mb-3">
+                                        {/* <div className="text-center mb-3">
                                             <a href="#forgot" className="text-muted text-decoration-none small">
                                                 Forgot Password?
                                             </a>
-                                        </div>
+                                        </div> */}
                                         <button
                                             type="submit"
                                             className="btn btn-success btn-lg w-100"

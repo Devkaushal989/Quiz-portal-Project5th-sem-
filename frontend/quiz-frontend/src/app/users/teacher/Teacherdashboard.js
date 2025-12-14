@@ -4,7 +4,7 @@ import axios from 'axios';
 import AssignQuizModal from './AssignQuizModal';
 import quizLogo from '../../images/quiz_logo.png';
 
-const API_BASE_URL = 'http://localhost:8700/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
 const Sidebar = ({
     role,
     activeTab,
@@ -278,7 +278,7 @@ export default function TeacherDashboard() {
 
     const fetchCourses = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/courses`, getAxiosConfig());
+            const response = await axios.get(`${API_BASE_URL}/courses`, getAxiosConfig());
             if (response.data.success) {
                 setCoursesData(response.data.data);
             }
@@ -289,7 +289,7 @@ export default function TeacherDashboard() {
 
     const fetchQuestionPools = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/question-pools`, getAxiosConfig());
+            const response = await axios.get(`${API_BASE_URL}/question-pools`, getAxiosConfig());
             if (response.data.success) {
                 setQuestionPools(response.data.data);
             }
@@ -325,7 +325,7 @@ export default function TeacherDashboard() {
 
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/question-pools`,
+                `${API_BASE_URL}/question-pools`,
                 questionPoolData,
                 getAxiosConfig()
             );
@@ -352,7 +352,7 @@ export default function TeacherDashboard() {
 
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/courses`,
+                `${API_BASE_URL}/courses`,
                 courseData,
                 getAxiosConfig()
             );
@@ -385,7 +385,7 @@ export default function TeacherDashboard() {
             ];
 
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/questions`,
+                `${API_BASE_URL}/questions`,
                 {
                     questionText: newQuestion.questionText,
                     options: options,
@@ -441,7 +441,7 @@ export default function TeacherDashboard() {
 
         try {
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/questions/upload-csv`,
+                `${API_BASE_URL}/questions/upload-csv`,
                 formData,
                 {
                     ...getAxiosConfig(),
@@ -484,7 +484,7 @@ export default function TeacherDashboard() {
 
         try {
             const response = await axios.delete(
-                `${process.env.REACT_APP_API_URL}/questions/${questionId}`,
+                `${API_BASE_URL}/questions/${questionId}`,
                 getAxiosConfig()
             );
 
@@ -509,7 +509,7 @@ export default function TeacherDashboard() {
 
         try {
             const response = await axios.delete(
-                `${process.env.REACT_APP_API_URL}/courses/${courseId}`,
+                `${API_BASE_URL}/courses/${courseId}`,
                 getAxiosConfig()
             );
 
