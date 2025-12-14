@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
@@ -23,7 +23,7 @@ export default function QuizResult() {
         fetchResult();
     }, [attemptId]);
 
-    const fetchResult = async () => {
+    const fetchResult = useCallback(async () => {
         try {
             setLoading(true);
             const response = await axios.get(
@@ -40,7 +40,7 @@ export default function QuizResult() {
         } finally {
             setLoading(false);
         }
-    };
+    });
 
     const getGradeInfo = (percentage) => {
         if (percentage >= 90) return { grade: 'A+', color: 'success', message: 'Excellent!' };

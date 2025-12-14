@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect,useCallback } from 'react';
 import axios from 'axios';
 import quizLogo from '../../images/quiz_logo.png';
 
@@ -181,7 +180,7 @@ export default function AdminDashboard() {
         fetchDashboardData();
     }, []);
 
-    const fetchDashboardData = async () => {
+    const fetchDashboardData = useCallback(async () => {
         try {
             setLoading(true);
             await Promise.all([
@@ -195,7 +194,7 @@ export default function AdminDashboard() {
         } finally {
             setLoading(false);
         }
-    };
+    });
 
     const fetchTeachers = async () => {
         try {
