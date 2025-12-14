@@ -14,30 +14,27 @@ import QuizResult from './app/users/student/QuizResult';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
-        <Routes>
-           
-            <Route path='/' element={<Loginpage />}></Route>
-      
-            <Route path='*' element={<Apperrorpage />}></Route> 
-            
-            <Route element={<ProtectedRoute allowedUserType="Student" />}>
-                <Route path='student' element={<StudentDashboard />}></Route>
-                <Route path='student/result' element={<Studentresult />}></Route>
-                <Route path='student/quiz/:courseId' element={<QuizTaking />}></Route>
-                <Route path='student/quiz-result/:attemptId' element={<QuizResult />}></Route>
-            </Route>
+  <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Loginpage />} />
 
-            <Route element={<ProtectedRoute allowedUserType="Teacher" />}>
-                <Route path='teacher' element={<TeacherDashboard/>}></Route>
-                <Route path='teacher/result' element={<TeacherResultsPage/>}></Route>
-                
-            </Route>
-            
-            <Route element={<ProtectedRoute allowedUserType="Admin" />}>
-                <Route path='admin' element={<AdminDashboard/>}></Route>
-            </Route>
+      <Route element={<ProtectedRoute allowedUserType="Student" />}>
+        <Route path='/student' element={<StudentDashboard />} />
+        <Route path='/student/result' element={<Studentresult />} />
+        <Route path='/student/quiz/:courseId' element={<QuizTaking />} />
+        <Route path='/student/quiz-result/:attemptId' element={<QuizResult />} />
+      </Route>
 
-        </Routes>
-    </BrowserRouter>
+      <Route element={<ProtectedRoute allowedUserType="Teacher" />}>
+        <Route path='/teacher' element={<TeacherDashboard />} />
+        <Route path='/teacher/result' element={<TeacherResultsPage />} />
+      </Route>
+
+      <Route element={<ProtectedRoute allowedUserType="Admin" />}>
+        <Route path='/admin' element={<AdminDashboard />} />
+      </Route>
+
+      <Route path='*' element={<Apperrorpage />} />
+    </Routes>
+  </BrowserRouter>
 );
