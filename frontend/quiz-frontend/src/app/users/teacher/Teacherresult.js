@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+import quizLogo from '../../images/quiz_logo.png';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api'
-import quizLogo from '../../images/quiz_logo.png';
+
 
 const Sidebar = ({
     role,
