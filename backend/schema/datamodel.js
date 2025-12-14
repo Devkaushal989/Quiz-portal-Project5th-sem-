@@ -24,7 +24,6 @@ const userSchema = new mongoose.Schema({
     enum: ['Student', 'Teacher', 'Admin'],
     required: true
   },
- 
   program: {
     type: String,
     required: function() {
@@ -36,6 +35,10 @@ const userSchema = new mongoose.Schema({
     required: function() {
       return this.userType === 'Student';
     }
+  },
+  department: {
+    type: String,
+    default: ''
   },
   createdAt: {
     type: Date,

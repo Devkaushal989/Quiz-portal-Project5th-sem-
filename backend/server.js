@@ -12,7 +12,8 @@ const courseRoutes = require('./route/course');
 const questionRoutes = require('./route/question');
 const studentRoutes = require('./route/student');
 const assignmentRoutes = require('./route/assignment');
-const resultRoute = require('./route/result')
+const resultRoute = require('./route/result');
+const adminRoutes = require('./route/admin');
 
 dotenv.config();
 
@@ -33,12 +34,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/question-pools', questionPoolRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/questions', questionRoutes);
-app.use('/api/student',studentRoutes);
-app.use('/api/assignments',assignmentRoutes);
-app.use('/api/results',resultRoute)
+app.use('/api/student', studentRoutes);
+app.use('/api/assignments', assignmentRoutes);
+app.use('/api/results', resultRoute);
+app.use('/api/admin', adminRoutes);
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Quiz Portal API is running ' });
+    res.json({ message: 'Quiz Portal API is running' });
 });
 
 const port = process.env.PORT || 8700;

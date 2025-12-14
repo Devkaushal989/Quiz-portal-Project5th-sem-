@@ -21,7 +21,7 @@
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.mycontainer:hover {
+/* .mycontainer:hover {
     transform: translateY(-15px) scale(1.05);
     box-shadow: 10px 5px 5px black;
     background: linear-gradient(135deg,
@@ -31,7 +31,7 @@
     border-color: rgb(39, 38, 38);
     color: white;
     text-decoration: none;
-}
+} */
 
 .multiple_users {
     display: flex;
@@ -41,10 +41,7 @@
 }
 
 .both_form {
-    /* background: linear-gradient(135deg,
-            rgba(224, 229, 230, 0.8) 0%,
-            rgba(234, 241, 243, 0.6) 50%,
-            rgba(227, 224, 224, 0.8) 100%); */
+   
     border-radius: 10px;
 
 }
@@ -53,13 +50,13 @@
     margin-top: 9px;
 }
 
-input:hover {
+/* input:hover {
     cursor: pointer;
     width: 100%;
     height: 100%;
     border-radius: 5px;
     animation: bounce 8s infinite;
-}
+} */
 
 @keyframes bounce {
     0% {

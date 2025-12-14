@@ -1,6 +1,600 @@
-.logo_image{
-    width: 250px;
-    padding: 0px;
-    height: 100px;
-}
+    /* ========================================
+    STUDENT DASHBOARD RESPONSIVE CSS
+    ======================================== */
 
+    /* Base Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+            sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Card Transitions */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Sidebar Styles */
+    .sidebar-nav-btn {
+        padding: 1rem 1.5rem !important;
+        font-weight: 500;
+    }
+
+    .sidebar-nav-btn:hover:not([style*="background-color: #198754"]) {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .logout-btn {
+        color: #dc3545 !important;
+        transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+
+    .logout-btn:hover .logout-svg {
+        stroke: white !important;
+    }
+
+    .stat-card:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Modal Animation */
+    .modal.show {
+        animation: fadeIn 0.3s forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Sidebar Scrollbar */
+    .bg-dark::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .bg-dark::-webkit-scrollbar-track {
+        background: #1a1a1a;
+    }
+
+    .bg-dark::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 3px;
+    }
+
+    .bg-dark::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* ========================================
+    DESKTOP STYLES (Default - 1024px and above)
+    ======================================== */
+    @media (min-width: 1024px) {
+        .sidebar-container {
+            width: 280px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .modal-dialog {
+            max-width: 90%;
+        }
+    }
+
+    /* ========================================
+    TABLET STYLES (768px - 1023px)
+    ======================================== */
+    @media (max-width: 1023px) and (min-width: 768px) {
+        .sidebar-container {
+            width: 250px !important;
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1050;
+            transition: left 0.3s ease-in-out;
+        }
+
+        .sidebar-container.active {
+            left: 0;
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+            width: 100%;
+        }
+
+        /* Logo Section */
+        .logo-section img {
+            width: 40px !important;
+        }
+
+        .logo-section h4 {
+            font-size: 1.1rem !important;
+        }
+
+        /* Profile Section */
+        .profile-avatar {
+            width: 80px !important;
+            height: 80px !important;
+        }
+
+        .profile-avatar svg {
+            width: 40px !important;
+            height: 40px !important;
+        }
+
+        /* Stats Cards */
+        .col-md-3 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        /* Quiz Cards */
+        .col-lg-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Dashboard Layout */
+        .col-md-8,
+        .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Modal */
+        .modal-dialog {
+            max-width: 95%;
+            margin: 1rem auto;
+        }
+
+        .modal-xl {
+            max-width: 95%;
+        }
+
+        /* Table Responsive */
+        .table-responsive {
+            font-size: 0.9rem;
+        }
+
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            display: block !important;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1051;
+            background-color: #198754;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    /* ========================================
+    MOBILE STYLES (Below 768px)
+    ======================================== */
+    @media (max-width: 767px) {
+        /* Sidebar */
+        .sidebar-container {
+            width: 280px !important;
+            position: fixed;
+            left: -280px;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1050;
+            transition: left 0.3s ease-in-out;
+        }
+
+        .sidebar-container.active {
+            left: 0;
+        }
+
+        /* Overlay for Mobile Sidebar */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0 !important;
+            width: 100%;
+            padding: 1rem !important;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            padding: 0.75rem !important;
+        }
+
+        .logo-section img {
+            width: 35px !important;
+        }
+
+        .logo-section h4 {
+            font-size: 1rem !important;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            padding: 1.5rem 0.5rem !important;
+        }
+
+        .profile-avatar {
+            width: 70px !important;
+            height: 70px !important;
+            border-width: 2px !important;
+        }
+
+        .profile-avatar svg {
+            width: 35px !important;
+            height: 35px !important;
+        }
+
+        .profile-badge {
+            font-size: 8px !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+
+        .profile-name {
+            font-size: 0.95rem !important;
+        }
+
+        .profile-details {
+            gap: 0.5rem !important;
+            padding: 0 0.5rem !important;
+        }
+
+        .profile-detail-box {
+            padding: 0.5rem !important;
+        }
+
+        .profile-detail-box small {
+            font-size: 9px !important;
+        }
+
+        /* Navigation */
+        .sidebar-nav-btn {
+            padding: 0.75rem 1rem !important;
+            font-size: 0.9rem !important;
+        }
+
+        .sidebar-nav-btn svg {
+            width: 18px !important;
+            height: 18px !important;
+        }
+
+        /* Header */
+        .page-header {
+            margin-top: 60px;
+        }
+
+        .page-header h2 {
+            font-size: 1.25rem !important;
+        }
+
+        .page-header p {
+            font-size: 0.85rem !important;
+        }
+
+        /* Stats Cards */
+        .stats-row .col-md-3 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card .card-body {
+            padding: 1rem !important;
+        }
+
+        .stat-card svg {
+            width: 28px !important;
+            height: 28px !important;
+        }
+
+        .stat-card h3 {
+            font-size: 1.5rem !important;
+        }
+
+        .stat-card p {
+            font-size: 0.8rem !important;
+        }
+
+        /* Quiz Cards */
+        .quiz-cards .col-lg-4,
+        .quiz-cards .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .quiz-card .card-body {
+            padding: 1rem !important;
+        }
+
+        .quiz-card h5 {
+            font-size: 1rem !important;
+        }
+
+        .quiz-card .alert {
+            font-size: 0.8rem !important;
+            padding: 0.5rem !important;
+        }
+
+        /* Dashboard Layout */
+        .dashboard-row .col-md-8,
+        .dashboard-row .col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Recent Results */
+        .recent-results h5 {
+            font-size: 1rem !important;
+        }
+
+        .recent-results .card-body {
+            padding: 0.75rem !important;
+        }
+
+        .recent-results h6 {
+            font-size: 0.9rem !important;
+        }
+
+        .recent-results small {
+            font-size: 0.75rem !important;
+        }
+
+        /* Upcoming Deadlines */
+        .upcoming-deadlines h5 {
+            font-size: 1rem !important;
+        }
+
+        .upcoming-deadlines .card-body {
+            padding: 0.75rem !important;
+        }
+
+        .upcoming-deadlines h6 {
+            font-size: 0.85rem !important;
+        }
+
+        /* Table */
+        .table-responsive {
+            font-size: 0.8rem;
+        }
+
+        .table thead th {
+            font-size: 0.75rem !important;
+            padding: 0.5rem !important;
+        }
+
+        .table tbody td {
+            font-size: 0.75rem !important;
+            padding: 0.5rem !important;
+        }
+
+        .table .btn-sm {
+            font-size: 0.7rem !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+
+        /* Modal */
+        .modal-dialog {
+            max-width: 95%;
+            margin: 0.5rem;
+        }
+
+        .modal-xl {
+            max-width: 95%;
+        }
+
+        .modal-header {
+            padding: 0.75rem 1rem !important;
+        }
+
+        .modal-title {
+            font-size: 1rem !important;
+        }
+
+        .modal-body {
+            padding: 1rem !important;
+        }
+
+        .modal-body .row {
+            font-size: 0.8rem !important;
+        }
+
+        .modal-body .table {
+            font-size: 0.7rem !important;
+        }
+
+        .modal-body .table th,
+        .modal-body .table td {
+            padding: 0.4rem !important;
+        }
+
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            display: block !important;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1051;
+            background-color: #198754;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 0.75rem !important;
+            padding: 0.35rem 0.65rem !important;
+        }
+
+        /* Buttons */
+        .btn {
+            font-size: 0.85rem !important;
+            padding: 0.5rem 1rem !important;
+        }
+
+        /* Alert */
+        .alert {
+            font-size: 0.85rem !important;
+            padding: 0.75rem !important;
+        }
+
+        .alert h5 {
+            font-size: 1rem !important;
+        }
+    }
+
+    @media (max-width: 479px) {
+        .sidebar-container {
+            width: 260px !important;
+        }
+
+        .logo-section h4 {
+            font-size: 0.9rem !important;
+        }
+
+        .profile-avatar {
+            width: 60px !important;
+            height: 60px !important;
+        }
+
+        .profile-avatar svg {
+            width: 30px !important;
+            height: 30px !important;
+        }
+
+        .stat-card h3 {
+            font-size: 1.25rem !important;
+        }
+
+        .quiz-card h5 {
+            font-size: 0.9rem !important;
+        }
+
+        .modal-body .table {
+            font-size: 0.65rem !important;
+        }
+
+        .page-header h2 {
+            font-size: 1.1rem !important;
+        }
+    }
+
+    @media print {
+        .sidebar-container,
+        .sidebar-toggle,
+        .logout-btn,
+        .btn,
+        .alert {
+            display: none !important;
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+            page-break-inside: avoid;
+        }
+    }
+
+    .hide-desktop {
+        display: none;
+    }
+
+    @media (max-width: 1023px) {
+        .hide-mobile {
+            display: none;
+        }
+
+        .hide-desktop {
+            display: block;
+        }
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    button:focus,
+    a:focus {
+        outline: 2px solid #198754;
+        outline-offset: 2px;
+    }
+
+    /* Loading Spinner */
+    .spinner-border {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    @media (max-width: 767px) {
+        .spinner-border {
+            width: 2rem;
+            height: 2rem;
+        }
+    }

@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Quiz_Logo from '../../images/quiz_logo.png';
-import './student_result.css';
+// import './student_result.css';
 
 const API_BASE_URL = 'http://localhost:8700/api';
 

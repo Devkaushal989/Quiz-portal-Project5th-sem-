@@ -10,6 +10,7 @@ export default function QuizTaking() {
   const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState(null);
+  const [quizSchedule, setQuizSchedule] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(0);
@@ -17,39 +18,157 @@ export default function QuizTaking() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [startTime, setStartTime] = useState(null);
+  const [timeWindowStatus, setTimeWindowStatus] = useState('checking');
 
   const getAuthToken = () => localStorage.getItem('token');
   const getAxiosConfig = () => ({
     headers: { Authorization: `Bearer ${getAuthToken()}` }
   });
 
+  const checkTimeWindow = (scheduleInfo) => {
+    if (!scheduleInfo || !scheduleInfo.scheduledStartTime || !scheduleInfo.scheduledEndTime) {
+      return 'active'; 
+    }
+
+    const now = new Date();
+    const startTime = new Date(scheduleInfo.scheduledStartTime);
+    const endTime = new Date(scheduleInfo.scheduledEndTime);
+
+    if (now < startTime) {
+      return 'before';
+    } else if (now >= endTime) {
+      return 'after';
+    } else {
+      return 'active';
+    }
+  };
+
+  const getTimeUntilStart = () => {
+    if (!quizSchedule || !quizSchedule.scheduledStartTime) return 0;
+    const now = new Date();
+    const startTime = new Date(quizSchedule.scheduledStartTime);
+    return Math.max(0, Math.floor((startTime - now) / 1000));
+  };
+
+  const getTimeUntilEnd = () => {
+    if (!quizSchedule || !quizSchedule.scheduledEndTime) return Infinity;
+    const now = new Date();
+    const endTime = new Date(quizSchedule.scheduledEndTime);
+    return Math.max(0, Math.floor((endTime - now) / 1000));
+  };
+
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
   useEffect(() => {
-    startQuiz();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchQuizSchedule = async () => {
+      try {
+        setLoading(true);
+        const scheduleResponse = await axios.get(
+          `${API_BASE_URL}/student/quiz/schedule/${courseId}`,
+          getAxiosConfig()
+        );
+
+        if (scheduleResponse.data.success) {
+          const schedule = scheduleResponse.data.data;
+          setQuizSchedule(schedule);
+          
+          const status = checkTimeWindow(schedule);
+          setTimeWindowStatus(status);
+        } else {
+          setTimeWindowStatus('active');
+        }
+      } catch (err) {
+        console.log('No schedule found, allowing quiz:', err);
+        setTimeWindowStatus('active');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuizSchedule();
   }, [courseId]);
 
   useEffect(() => {
-    if (timeLeft > 0) {
+    if (!quizSchedule) return;
+
+    const interval = setInterval(() => {
+      const newStatus = checkTimeWindow(quizSchedule);
+      
+      if (newStatus !== timeWindowStatus) {
+        setTimeWindowStatus(newStatus);
+      }
+      
+      if (newStatus === 'after' && quiz && !submitting) {
+        handleSubmit(true);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [quizSchedule, timeWindowStatus, quiz, submitting]);
+
+  useEffect(() => {
+    if (timeWindowStatus === 'active' && !quiz) {
+      startQuiz();
+    }
+  }, [timeWindowStatus]);
+
+  useEffect(() => {
+    if (timeLeft > 0 && quiz) {
+      if (quizSchedule) {
+        const status = checkTimeWindow(quizSchedule);
+        if (status === 'after') {
+          handleSubmit(true);
+          return;
+        }
+      }
+
       const timer = setTimeout(() => {
         setTimeLeft((t) => t - 1);
       }, 1000);
       return () => clearTimeout(timer);
     } else if (timeLeft === 0 && quiz) {
-      // Auto-submit when timer hits 0 (no confirm)
       handleSubmit(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, quiz]);
 
   const startQuiz = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(`${API_BASE_URL}/student/quiz/start/${courseId}`, {}, getAxiosConfig());
+      const response = await axios.post(
+        `${API_BASE_URL}/student/quiz/start/${courseId}`,
+        {},
+        getAxiosConfig()
+      );
 
       if (response.data.success) {
         const quizData = response.data.data;
         setQuiz(quizData);
-        setTimeLeft(quizData.duration * 60); // minutes -> seconds
+      
+        if (quizData.scheduledStartTime && quizData.scheduledEndTime) {
+          setQuizSchedule({
+            scheduledStartTime: quizData.scheduledStartTime,
+            scheduledEndTime: quizData.scheduledEndTime
+          });
+        }
+        
+        let calculatedTimeLeft = quizData.duration * 60; 
+        
+        if (quizSchedule && quizSchedule.scheduledEndTime) {
+          const timeUntilEnd = getTimeUntilEnd();
+          calculatedTimeLeft = Math.min(calculatedTimeLeft, timeUntilEnd);
+        }
+        
+        setTimeLeft(calculatedTimeLeft);
         setStartTime(Date.now());
 
         const initialAnswers = {};
@@ -84,9 +203,7 @@ export default function QuizTaking() {
     setCurrentQuestion(index);
   };
 
-  // isAuto: true when timer auto-submits; false when user clicks submit
   const handleSubmit = async (isAuto = false) => {
-    // If it's a manual submit, show confirmation. If auto, skip confirm.
     if (!isAuto) {
       const ok = window.confirm('Are you sure you want to submit? You cannot change answers after submission.');
       if (!ok) return;
@@ -113,8 +230,6 @@ export default function QuizTaking() {
       );
 
       if (response.data.success) {
-        // Navigate to Assigned Quizzes page after successful submit
-        // This was your requested change (previously navigated to result page)
         navigate('/student');
       } else {
         setError(response.data.message || 'Failed to submit quiz');
@@ -135,6 +250,65 @@ export default function QuizTaking() {
 
   const getAnsweredCount = () => Object.values(answers).filter((a) => a !== null).length;
 
+  if (timeWindowStatus === 'before' && quizSchedule) {
+    const timeUntilStart = getTimeUntilStart();
+    return (
+      <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div className="card border-0 shadow-lg" style={{ maxWidth: '600px', width: '100%' }}>
+          <div className="card-body text-center p-5">
+            <div className="text-warning mb-4" style={{ fontSize: '64px' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <h3 className="fw-bold mb-3">Quiz Not Yet Started</h3>
+            <p className="text-muted mb-4">
+              This quiz will start at <strong>{formatDateTime(quizSchedule.scheduledStartTime)}</strong>
+              <br />
+              and end at <strong>{formatDateTime(quizSchedule.scheduledEndTime)}</strong>
+            </p>
+            <div className="alert alert-info">
+              <h4 className="mb-0">Time until quiz starts: <strong>{formatTime(timeUntilStart)}</strong></h4>
+            </div>
+            <p className="text-muted small mt-3">This page will automatically refresh when the quiz starts.</p>
+            <button className="btn btn-outline-secondary mt-3" onClick={() => navigate('/student')}>
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (timeWindowStatus === 'after' && quizSchedule) {
+    return (
+      <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div className="card border-0 shadow-lg" style={{ maxWidth: '600px', width: '100%' }}>
+          <div className="card-body text-center p-5">
+            <div className="text-danger mb-4" style={{ fontSize: '64px' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <h3 className="fw-bold mb-3">Quiz Time Window Ended</h3>
+            <p className="text-muted mb-4">
+              The quiz time window has ended at <strong>{formatDateTime(quizSchedule.scheduledEndTime)}</strong>
+            </p>
+            <div className="alert alert-danger">
+              <p className="mb-0">You can no longer take this quiz.</p>
+            </div>
+            <button className="btn btn-primary mt-3" onClick={() => navigate('/student')}>
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-vh-100 d-flex align-items-center justify-content-center">
@@ -154,7 +328,7 @@ export default function QuizTaking() {
         <div className="card border-0 shadow-lg" style={{ maxWidth: '500px' }}>
           <div className="card-body text-center p-5">
             <div className="text-danger mb-3" style={{ fontSize: '48px' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
                 <line x1="12" y1="9" x2="12" y2="13"></line>
                 <line x1="12" y1="17" x2="12" y2="17"></line>
@@ -195,6 +369,9 @@ export default function QuizTaking() {
                 </span>
                 <h4 className={`mb-0 ${timeLeft < 300 ? 'text-danger' : 'text-white'}`}>{formatTime(timeLeft)}</h4>
               </div>
+              {quizSchedule && quizSchedule.scheduledEndTime && (
+                <small className="text-warning">Ends at {formatDateTime(quizSchedule.scheduledEndTime)}</small>
+              )}
             </div>
             <div className="col-md-4 text-end">
               <span className="badge bg-success me-2">{getAnsweredCount()} / {quiz.questions.length} Answered</span>
@@ -216,9 +393,6 @@ export default function QuizTaking() {
             <div className="card border-0 shadow-sm mb-4">
               <div className="card-body p-4">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                  {/* <span className={`badge bg-${currentQ.difficulty === 'easy' ? 'success' : currentQ.difficulty === 'medium' ? 'warning' : 'danger'}`}>
-                    {currentQ.difficulty.toUpperCase()}
-                  </span> */}
                   <span className="text-muted">Marks: {currentQ.marks}</span>
                 </div>
 
