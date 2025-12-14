@@ -74,7 +74,7 @@ export default function QuizTaking() {
       try {
         setLoading(true);
         const scheduleResponse = await axios.get(
-          `${API_BASE_URL}/student/quiz/schedule/${courseId}`,
+          `${process.env.REACT_APP_API_URL}/student/quiz/schedule/${courseId}`,
           getAxiosConfig()
         );
 
@@ -221,13 +221,14 @@ export default function QuizTaking() {
       }));
 
       const response = await axios.post(
-        `${API_BASE_URL}/student/quiz/submit/${quiz.attemptId}`,
-        {
-          answers: formattedAnswers,
-          timeTaken
-        },
-        getAxiosConfig()
-      );
+  `${process.env.REACT_APP_API_URL}/student/quiz/submit/${quiz.attemptId}`,
+  {
+    answers: formattedAnswers,
+    timeTaken
+  },
+  getAxiosConfig()
+);
+
 
       if (response.data.success) {
         navigate('/student');

@@ -44,7 +44,7 @@ export default function AssignQuizModal({ show, onClose, courseId, courseName })
     const fetchStudents = async () => {
         try {
             const response = await axios.get(
-                `${API_BASE_URL}/assignments/students`,
+                `${process.env.REACT_APP_API_URL}/assignments/students`,
                 getAxiosConfig()
             );
             if (response.data.success) {
@@ -91,7 +91,7 @@ export default function AssignQuizModal({ show, onClose, courseId, courseName })
             }
 
             const response = await axios.post(
-                `${API_BASE_URL}/assignments/assign`,
+                `${process.env.REACT_APP_API_URL}/assignments/assign`,
                 {
                     courseId: courseId,
                     studentIds: studentIdsToAssign,

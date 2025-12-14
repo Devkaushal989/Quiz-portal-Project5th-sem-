@@ -27,9 +27,10 @@ export default function QuizResult() {
         try {
             setLoading(true);
             const response = await axios.get(
-                `${API_BASE_URL}/student/quiz/result/${attemptId}`,
-                getAxiosConfig()
-            );
+  `${process.env.REACT_APP_API_URL}/student/quiz/result/${attemptId}`,
+  getAxiosConfig()
+);
+
 
             if (response.data.success) {
                 setResult(response.data.data);
