@@ -26,7 +26,7 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
-app.use(cors);
+app.use(cors());
 app.use(express.json());
 
 app.use(myrouting);

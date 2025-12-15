@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './loginpage.css';
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8700/api';
+const API_BASE_URL =  'http://localhost:8700/api';
 
 export default function AuthPage() {
     const [userType, setUserType] = useState('Student');
