@@ -26,7 +26,12 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
-app.use(cors);
+app.use(
+  cors({
+    origin: "*", // later you can restrict to Netlify URL
+    credentials: true
+  })
+);
 app.use(express.json());
 
 app.use(myrouting);
