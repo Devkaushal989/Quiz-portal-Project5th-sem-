@@ -26,12 +26,7 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
 
-app.use(cors({
-  origin: [
-    "https://quizotron.netlify.app/"
-  ],
-  credentials: true
-}));
+app.use(cors);
 app.use(express.json());
 
 app.use(myrouting);
